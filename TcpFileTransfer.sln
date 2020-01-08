@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29409.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpFileTransfer", "TcpFileTransfer\TcpFileTransfer.csproj", "{3D8FC965-F7E6-4DFB-A1B0-E9F6C8289569}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{A811D370-53BA-40FF-86D8-83EF661865FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D8FC965-F7E6-4DFB-A1B0-E9F6C8289569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D8FC965-F7E6-4DFB-A1B0-E9F6C8289569}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D8FC965-F7E6-4DFB-A1B0-E9F6C8289569}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D8FC965-F7E6-4DFB-A1B0-E9F6C8289569}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A811D370-53BA-40FF-86D8-83EF661865FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A811D370-53BA-40FF-86D8-83EF661865FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A811D370-53BA-40FF-86D8-83EF661865FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A811D370-53BA-40FF-86D8-83EF661865FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {83FE0F68-42D9-4300-ACB9-3D10D0AE18CD}
+	EndGlobalSection
+EndGlobal
