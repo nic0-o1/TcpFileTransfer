@@ -50,6 +50,10 @@ namespace TcpFileTransfer
                 listBox1.DataSource = elem;
 
                 lblIP.Text = $"Connesso a : {txtIpServer.Text}";
+                lblIP.Text = $"Nope : {txtIpServer.Text}";
+
+
+                //test
             }
             else
             {
