@@ -31,48 +31,53 @@ namespace TcpFileTransfer
         private bool checkIP(string toCheck)
         {
             IPAddress ip;
-            if (!IPAddress.TryParse("1234.12.12.12", out ip))
-                return false;
+            if (!IPAddress.TryParse(toCheck, out ip))
+                throw new ArgumentException("Indirizzo ip non valido");
             return true;
             
         }
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if (checkIP(txtIpServer.Text))
+            try
             {
+                checkIP(txtIpServer.Text);
+
                 connectToServer(txtIpServer.Text, 0);
 
                 stream = server.GetStream();
 
                 stream.Read(received, 0, received.Length);
 
-                List<string> elem = JsonConvert.DeserializeObject<List<string>>(encoding.GetString(received));
-                listBox1.DataSource = elem;
+                listBox1.DataSource = JsonConvert.DeserializeObject<List<string>>(encoding.GetString(received));
 
                 lblIP.Text = $"Connesso a : {txtIpServer.Text}";
-                lblIP.Text = $"Nope : {txtIpServer.Text}";
-
-
-                //test
             }
-            else
+            catch (ArgumentException)
             {
                 txtIpServer.WithError = true;
                 lblErroreIP.Text = "Indirizzo IP non valido";
-            }
+            } 
+            catch (System.Net.Sockets.SocketException ex) { MetroFramework.MetroMessageBox.Show(this, "\n\nImpossible contattare il server all'indirizzo: "+txtIpServer.Text, "Errore",MessageBoxButtons.OK,MessageBoxIcon.Error); }
+            catch (Exception ex) { MetroFramework.MetroMessageBox.Show(this, "\n\n"+ex.Message, "Errore",MessageBoxButtons.OK,MessageBoxIcon.Error); }
 
         }
         private void listBox1_MouseClick(object sender, MouseEventArgs e)
         {
             toDownload = listBox1.GetItemText(listBox1.SelectedItem);
+
             string send = "download;" + toDownload;
+
             toSend = encoding.GetBytes(send);
+
             toSend = TrimEnd(toSend);
+
             stream.Write(toSend, 0, toSend.Length);
+
             toSend = new Byte[400000];
+
             ReciveFile();
         }
-        public byte[] TrimEnd(byte[] array)
+        private byte[] TrimEnd(byte[] array)
         {
             int lastIndex = Array.FindLastIndex(array, b => b != 0);
 
@@ -139,9 +144,8 @@ namespace TcpFileTransfer
                 stream.Write(toSend, 0, toSend.Length);
                 toSend = new byte[400000];
                 if (checkError())
-                {
                     break;
-                }
+                
             }
         }
         private bool checkError()
@@ -151,7 +155,7 @@ namespace TcpFileTransfer
             string msg = encoding.GetString(received);
             if (msg.Contains("Errore"))
             {
-                MessageBox.Show(msg);
+                MetroFramework.MetroMessageBox.Show(this, "\n\n" + msg, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return true;
             }
             else

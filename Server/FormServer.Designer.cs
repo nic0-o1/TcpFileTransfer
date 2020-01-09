@@ -45,10 +45,13 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.btnChooseDir = new MetroFramework.Controls.MetroButton();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
+            this.lblStatus = new MetroFramework.Controls.MetroLabel();
+            this.picReload = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picReload)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStart
@@ -160,7 +163,7 @@
             // lblPath
             // 
             this.lblPath.AutoSize = true;
-            this.lblPath.Location = new System.Drawing.Point(500, 30);
+            this.lblPath.Location = new System.Drawing.Point(531, 30);
             this.lblPath.Name = "lblPath";
             this.lblPath.Size = new System.Drawing.Size(83, 19);
             this.lblPath.TabIndex = 12;
@@ -202,11 +205,33 @@
             this.metroLabel2.TabIndex = 15;
             this.metroLabel2.Text = "Cartella condivisione file";
             // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(165, 299);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(83, 19);
+            this.lblStatus.TabIndex = 16;
+            this.lblStatus.Text = "metroLabel3";
+            // 
+            // picReload
+            // 
+            this.picReload.BackgroundImage = global::Server.Properties.Resources.reload_;
+            this.picReload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.picReload.Location = new System.Drawing.Point(500, 30);
+            this.picReload.Name = "picReload";
+            this.picReload.Size = new System.Drawing.Size(25, 19);
+            this.picReload.TabIndex = 17;
+            this.picReload.TabStop = false;
+            this.picReload.Click += new System.EventHandler(this.picReload_Click);
+            // 
             // FormServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1081, 628);
+            this.Controls.Add(this.picReload);
+            this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.metroLabel2);
             this.Controls.Add(this.btnChooseDir);
             this.Controls.Add(this.btnClose);
@@ -218,13 +243,14 @@
             this.MaximizeBox = false;
             this.Name = "FormServer";
             this.Resizable = false;
-            this.Style = MetroFramework.MetroColorStyle.Teal;
+            this.Style = MetroFramework.MetroColorStyle.Lime;
             this.Text = "TCP HFS Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormServer_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picReload)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -246,6 +272,8 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private MetroFramework.Controls.MetroButton btnChooseDir;
         private MetroFramework.Controls.MetroLabel metroLabel2;
+        private MetroFramework.Controls.MetroLabel lblStatus;
+        private System.Windows.Forms.PictureBox picReload;
     }
 }
 

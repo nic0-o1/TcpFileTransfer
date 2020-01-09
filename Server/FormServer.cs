@@ -20,7 +20,7 @@ namespace Server
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
             log4net.Config.XmlConfigurator.Configure();
-           
+
         }
         private string sharedDir;
         private TcpListenerEx server;
@@ -65,6 +65,7 @@ namespace Server
             server.Start();
             log.Info("server avviato");
             Debug.WriteLine(GetIP());
+            lblStatus.Text = "server avviato";
 
             while (server.Active)
             {
@@ -111,7 +112,7 @@ namespace Server
         {
             try
             {
-                if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nServer attivo. Uscire ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.OK)
+                if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nServer attivo. Uscire ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     server.Stop();
                 }
@@ -123,7 +124,7 @@ namespace Server
         {
             if (MetroUploadToggle.Checked)
             {
-                if (MetroFramework.MetroMessageBox.Show(this, "\n\nSi sta per attivare l'upload. Continuare ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.OK)
+                if (MetroFramework.MetroMessageBox.Show(this, "\n\nSi sta per attivare l'upload. Continuare ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     ClientManager.canUpload = true;
                 }
@@ -135,6 +136,7 @@ namespace Server
         }
         private void PopulateTreeView()
         {
+            treeView1.Nodes.Clear();
             TreeNode rootNode;
 
             DirectoryInfo info = new DirectoryInfo(selectedPath);
@@ -229,12 +231,17 @@ namespace Server
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nprocedere con lo spegnimento del server ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.OK)
+            if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nprocedere con lo spegnimento del server ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 server.Stop();
                 btnClose.Enabled = false;
                 btnStart.Enabled = true;
             }
+        }
+
+        private void picReload_Click(object sender, EventArgs e)
+        {
+            PopulateTreeView();
         }
     }
 }

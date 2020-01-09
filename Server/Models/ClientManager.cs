@@ -33,7 +33,7 @@ namespace Server
 
         public void ManageConnection()
         {
-            //try
+            try
             {
                 sendDirectory();
                 while (true)
@@ -41,7 +41,7 @@ namespace Server
                     readPath();
                 }
             }
-           // catch { }
+            catch { }
 
         }
         private void InitializeDirectory()
