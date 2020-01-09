@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,18 +14,48 @@ namespace Server
 {
     public partial class FormServer : MetroFramework.Forms.MetroForm
     {
+        private enum Status { Offline, Online };
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public FormServer()
         {
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
             log4net.Config.XmlConfigurator.Configure();
+            lblIP.Text = "Indirizzo IP: " + GetIP();
+            ToggleFields(Status.Offline);
 
         }
         private string sharedDir;
         private TcpListenerEx server;
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly int PORT = 55000;
         private string selectedPath;
+        private string currentPath;
+
+        private void ToggleFields(Status s)
+        {
+            switch (s)
+            {
+                case Status.Offline:
+                    {
+                        lblState.ForeColor = Color.Red;
+                        lblState.Text = "Offline";
+                        picReload.Enabled = false;
+                        btnClose.Enabled = false;
+                        btnStart.Enabled = true;
+                        break;
+                    }
+                case Status.Online:
+                    {
+                        log.Info("Server Avviato");
+                        lblState.ForeColor = Color.Green;
+                        lblState.Text = "Online";
+                        btnClose.Enabled = true;
+                        btnStart.Enabled = false;
+                        picReload.Enabled = true;
+                        break;
+                    }
+            }
+        }
         private string GetIP()
         {
 
@@ -53,40 +82,43 @@ namespace Server
         {
             List<string> files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).ToList();
 
-            files = files.Select(x => x.Replace(path, string.Empty)).ToList();
-            files = files.Select(p => (!string.IsNullOrEmpty(p) && p.Length > 1) ? p.Substring(1) : p).ToList();
+            files = files.Select(x => x.Replace(path, string.Empty)).ToList(); //rimuove la parte del percorso prima della cartella
+            files = files.Select(p => (!string.IsNullOrEmpty(p) && p.Length > 1) ? p.Substring(1) : p).ToList();  //rimouove il primo \
 
             return JsonConvert.SerializeObject(files);
         }
         private void StartServer(object portObj)
         {
-            int port = Convert.ToInt32(portObj);
-            server = new TcpListenerEx(IPAddress.Parse(GetIP()), port);
-            server.Start();
-            log.Info("server avviato");
-            Debug.WriteLine(GetIP());
-            lblStatus.Text = "server avviato";
-
-            while (server.Active)
+            try
             {
-                TcpClient client = server.AcceptTcpClient();
+                int port = Convert.ToInt32(portObj);
+                server = new TcpListenerEx(IPAddress.Parse(GetIP()), port);
+                server.Start();
+                ToggleFields(Status.Online);
 
-                ClientManager clientManager = new ClientManager(client);
-                Thread clientThread = new Thread(new ThreadStart(clientManager.ManageConnection))
+                while (server.Active)
                 {
-                    IsBackground = true
-                };
-                clientThread.Start();
+                    using (TcpClient client = server.AcceptTcpClient())
+                    {
+                        ClientManager clientManager = new ClientManager(client);
+                        Thread clientThread = new Thread(new ThreadStart(clientManager.ManageConnection))
+                        {
+                            IsBackground = true
+                        };
+                        clientThread.Start();
+                    }
 
+                }
             }
+            catch { }
         }
         private void btnStart_Click(object sender, EventArgs e)
         {
-            Thread t = new Thread(new ParameterizedThreadStart(StartServer));
-            t.IsBackground = true;
+            Thread t = new Thread(new ParameterizedThreadStart(StartServer))
+            {
+                IsBackground = true
+            };
             t.Start(PORT);
-            btnStart.Enabled = false;
-            btnClose.Enabled = true;
         }
 
         private void btnChooseDir_Click(object sender, EventArgs e)
@@ -171,15 +203,15 @@ namespace Server
                 nodeToAddTo.Nodes.Add(aNode);
             }
         }
-        private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+
+        private void UpdateFileExplorer(TreeNode newSelected)
         {
-            TreeNode newSelected = e.Node;
             lstViewFiles.Items.Clear();
             DirectoryInfo nodeDirInfo = (DirectoryInfo)newSelected.Tag;
-            lblPath.Text = nodeDirInfo.FullName;
+            currentPath = nodeDirInfo.FullName;
+            lblPath.Text = currentPath;
             ListViewItem.ListViewSubItem[] subItems;
-            ListViewItem item = null;
-
+            ListViewItem item;
             foreach (DirectoryInfo dir in nodeDirInfo.GetDirectories())
             {
                 item = new ListViewItem(dir.Name, 0);
@@ -204,14 +236,26 @@ namespace Server
 
             lstViewFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
+        TreeNode lastSelected;
+        private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            TreeNode newSelected = e.Node;
+            lastSelected = newSelected;
+            UpdateFileExplorer(newSelected);
+           
+        }
 
         private string[] dropped;
         private void listView1_DragDrop(object sender, DragEventArgs e)
         {
-            dropped = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (server.Active)
+            {
+                dropped = (string[])e.Data.GetData(DataFormats.FileDrop);
             string[] val = dropped[0].Split('\\');
-            string newPath = selectedPath + "\\" + val[val.Length - 1];
+            string newPath = currentPath + @"\" + val[val.Length - 1];
             File.Copy(dropped[0], newPath);
+                UpdateFileExplorer(lastSelected);
+            }
             //groupBox1.BackgroundImage = null;
         }
 
@@ -234,14 +278,14 @@ namespace Server
             if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nprocedere con lo spegnimento del server ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 server.Stop();
-                btnClose.Enabled = false;
-                btnStart.Enabled = true;
+                ToggleFields(Status.Offline);
             }
         }
 
         private void picReload_Click(object sender, EventArgs e)
         {
-            PopulateTreeView();
+            UpdateFileExplorer(lastSelected);
         }
+
     }
 }

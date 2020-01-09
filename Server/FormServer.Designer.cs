@@ -45,8 +45,10 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.btnChooseDir = new MetroFramework.Controls.MetroButton();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
-            this.lblStatus = new MetroFramework.Controls.MetroLabel();
             this.picReload = new System.Windows.Forms.PictureBox();
+            this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
+            this.lblState = new MetroFramework.Controls.MetroLabel();
+            this.lblIP = new MetroFramework.Controls.MetroLabel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -59,7 +61,7 @@
             this.btnStart.ActiveControl = null;
             this.btnStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.btnStart.Enabled = false;
-            this.btnStart.Location = new System.Drawing.Point(23, 272);
+            this.btnStart.Location = new System.Drawing.Point(23, 323);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(109, 46);
             this.btnStart.TabIndex = 8;
@@ -74,16 +76,18 @@
             // metroLabel1
             // 
             this.metroLabel1.AutoSize = true;
-            this.metroLabel1.Location = new System.Drawing.Point(23, 178);
+            this.metroLabel1.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.metroLabel1.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+            this.metroLabel1.Location = new System.Drawing.Point(23, 229);
             this.metroLabel1.Name = "metroLabel1";
-            this.metroLabel1.Size = new System.Drawing.Size(52, 19);
+            this.metroLabel1.Size = new System.Drawing.Size(70, 25);
             this.metroLabel1.TabIndex = 9;
             this.metroLabel1.Text = "Upload";
             // 
             // MetroUploadToggle
             // 
             this.MetroUploadToggle.AutoSize = true;
-            this.MetroUploadToggle.Location = new System.Drawing.Point(23, 213);
+            this.MetroUploadToggle.Location = new System.Drawing.Point(23, 264);
             this.MetroUploadToggle.Name = "MetroUploadToggle";
             this.MetroUploadToggle.Size = new System.Drawing.Size(80, 17);
             this.MetroUploadToggle.Style = MetroFramework.MetroColorStyle.Green;
@@ -147,6 +151,9 @@
             this.lstViewFiles.TabIndex = 0;
             this.lstViewFiles.UseCompatibleStateImageBehavior = false;
             this.lstViewFiles.View = System.Windows.Forms.View.Details;
+            this.lstViewFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView1_DragDrop);
+            this.lstViewFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView1_DragEnter);
+            this.lstViewFiles.DragLeave += new System.EventHandler(this.listView1_DragLeave);
             // 
             // columnHeader1
             // 
@@ -174,7 +181,7 @@
             this.btnClose.ActiveControl = null;
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.btnClose.Enabled = false;
-            this.btnClose.Location = new System.Drawing.Point(23, 338);
+            this.btnClose.Location = new System.Drawing.Point(23, 389);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(109, 46);
             this.btnClose.TabIndex = 13;
@@ -188,7 +195,7 @@
             // 
             // btnChooseDir
             // 
-            this.btnChooseDir.Location = new System.Drawing.Point(23, 124);
+            this.btnChooseDir.Location = new System.Drawing.Point(23, 174);
             this.btnChooseDir.Name = "btnChooseDir";
             this.btnChooseDir.Size = new System.Drawing.Size(89, 26);
             this.btnChooseDir.TabIndex = 14;
@@ -199,20 +206,13 @@
             // metroLabel2
             // 
             this.metroLabel2.AutoSize = true;
-            this.metroLabel2.Location = new System.Drawing.Point(23, 81);
+            this.metroLabel2.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.metroLabel2.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+            this.metroLabel2.Location = new System.Drawing.Point(23, 132);
             this.metroLabel2.Name = "metroLabel2";
-            this.metroLabel2.Size = new System.Drawing.Size(151, 19);
+            this.metroLabel2.Size = new System.Drawing.Size(202, 25);
             this.metroLabel2.TabIndex = 15;
             this.metroLabel2.Text = "Cartella condivisione file";
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(165, 299);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(83, 19);
-            this.lblStatus.TabIndex = 16;
-            this.lblStatus.Text = "metroLabel3";
             // 
             // picReload
             // 
@@ -225,13 +225,48 @@
             this.picReload.TabStop = false;
             this.picReload.Click += new System.EventHandler(this.picReload_Click);
             // 
+            // metroLabel3
+            // 
+            this.metroLabel3.AutoSize = true;
+            this.metroLabel3.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.metroLabel3.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+            this.metroLabel3.Location = new System.Drawing.Point(23, 74);
+            this.metroLabel3.Name = "metroLabel3";
+            this.metroLabel3.Size = new System.Drawing.Size(53, 25);
+            this.metroLabel3.TabIndex = 18;
+            this.metroLabel3.Text = "Stato";
+            // 
+            // lblState
+            // 
+            this.lblState.AutoSize = true;
+            this.lblState.ForeColor = System.Drawing.Color.Red;
+            this.lblState.Location = new System.Drawing.Point(23, 103);
+            this.lblState.Name = "lblState";
+            this.lblState.Size = new System.Drawing.Size(48, 19);
+            this.lblState.TabIndex = 19;
+            this.lblState.Text = "Offline";
+            this.lblState.UseCustomBackColor = true;
+            this.lblState.UseCustomForeColor = true;
+            // 
+            // lblIP
+            // 
+            this.lblIP.AutoSize = true;
+            this.lblIP.Location = new System.Drawing.Point(7, 605);
+            this.lblIP.Name = "lblIP";
+            this.lblIP.Size = new System.Drawing.Size(83, 19);
+            this.lblIP.TabIndex = 20;
+            this.lblIP.Text = "metroLabel4";
+            // 
             // FormServer
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1081, 628);
+            this.Controls.Add(this.lblIP);
+            this.Controls.Add(this.lblState);
+            this.Controls.Add(this.metroLabel3);
             this.Controls.Add(this.picReload);
-            this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.metroLabel2);
             this.Controls.Add(this.btnChooseDir);
             this.Controls.Add(this.btnClose);
@@ -272,8 +307,10 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private MetroFramework.Controls.MetroButton btnChooseDir;
         private MetroFramework.Controls.MetroLabel metroLabel2;
-        private MetroFramework.Controls.MetroLabel lblStatus;
         private System.Windows.Forms.PictureBox picReload;
+        private MetroFramework.Controls.MetroLabel metroLabel3;
+        private MetroFramework.Controls.MetroLabel lblState;
+        private MetroFramework.Controls.MetroLabel lblIP;
     }
 }
 
