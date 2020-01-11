@@ -49,6 +49,7 @@
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             this.lblState = new MetroFramework.Controls.MetroLabel();
             this.lblIP = new MetroFramework.Controls.MetroLabel();
+            this.lblDrag = new MetroFramework.Controls.MetroLabel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -59,7 +60,7 @@
             // btnStart
             // 
             this.btnStart.ActiveControl = null;
-            this.btnStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.btnStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.btnStart.Enabled = false;
             this.btnStart.Location = new System.Drawing.Point(23, 323);
             this.btnStart.Name = "btnStart";
@@ -111,6 +112,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.lblDrag);
             this.splitContainer1.Panel2.Controls.Add(this.lstViewFiles);
             this.splitContainer1.Size = new System.Drawing.Size(577, 531);
             this.splitContainer1.SplitterDistance = 192;
@@ -175,6 +177,7 @@
             this.lblPath.Size = new System.Drawing.Size(83, 19);
             this.lblPath.TabIndex = 12;
             this.lblPath.Text = "metroLabel2";
+            this.lblPath.Visible = false;
             // 
             // btnClose
             // 
@@ -257,6 +260,18 @@
             this.lblIP.TabIndex = 20;
             this.lblIP.Text = "metroLabel4";
             // 
+            // lblDrag
+            // 
+            this.lblDrag.AutoSize = true;
+            this.lblDrag.Location = new System.Drawing.Point(115, 381);
+            this.lblDrag.Name = "lblDrag";
+            this.lblDrag.Size = new System.Drawing.Size(125, 19);
+            this.lblDrag.TabIndex = 21;
+            this.lblDrag.Text = "Rilascia per caricare";
+            this.lblDrag.UseCustomBackColor = true;
+            this.lblDrag.UseCustomForeColor = true;
+            this.lblDrag.Visible = false;
+            // 
             // FormServer
             // 
             this.AllowDrop = true;
@@ -283,6 +298,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormServer_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picReload)).EndInit();
@@ -311,6 +327,7 @@
         private MetroFramework.Controls.MetroLabel metroLabel3;
         private MetroFramework.Controls.MetroLabel lblState;
         private MetroFramework.Controls.MetroLabel lblIP;
+        private MetroFramework.Controls.MetroLabel lblDrag;
     }
 }
 

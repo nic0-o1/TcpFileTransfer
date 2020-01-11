@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Server
 {
+    /// <summary>
+    /// Inheritance of the <see cref="T:System.Net.Sockets.TcpListener"/> class
+    /// </summary>
     public class TcpListenerEx : TcpListener
     {
         /// <summary>
@@ -26,6 +24,9 @@ namespace Server
         {
         }
 
+        /// <summary>
+        /// Get the current status of the <see cref="Server.TcpListenerEx"/> class 
+        /// </summary>
         public new bool Active
         {
             get { return base.Active; }

@@ -24,17 +24,26 @@ namespace TcpFileTransfer
         private Byte[] received = new Byte[400000];
         private readonly Encoding encoding = Encoding.GetEncoding("Windows-1252");
 
-        private void connectToServer(string ip, Int32 port)
+        private const int PORT = 55000;
+
+        /// <summary>
+        /// Connect to the TCP server
+        /// </summary>
+        /// <param name="ip">Server IP</param>
+        private void connectToServer(string ip)
         {
-            server = new TcpClient(ip, 55000);
+            server = new TcpClient(ip, PORT);
         }
-        private bool checkIP(string toCheck)
+
+        /// <summary>
+        /// Check if an ip address is correct
+        /// </summary>
+        /// <param name="toCheck">ip to check</param>
+        /// <exception cref="ArgumentException">Thrown when the ip address is not correct</exception>
+        private void checkIP(string toCheck)
         {
-            IPAddress ip;
-            if (!IPAddress.TryParse(toCheck, out ip))
+            if (!IPAddress.TryParse(toCheck, out IPAddress ip))
                 throw new ArgumentException("Indirizzo ip non valido");
-            return true;
-            
         }
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -42,30 +51,37 @@ namespace TcpFileTransfer
             {
                 checkIP(txtIpServer.Text);
 
-                connectToServer(txtIpServer.Text, 0);
+                connectToServer(txtIpServer.Text);
 
                 stream = server.GetStream();
 
-                stream.Read(received, 0, received.Length);
-
-                listBox1.DataSource = JsonConvert.DeserializeObject<List<string>>(encoding.GetString(received));
+                ReceiveDirectory();
 
                 lblIP.Text = $"Connesso a : {txtIpServer.Text}";
             }
-            catch (ArgumentException)
-            {
-                txtIpServer.WithError = true;
-                lblErroreIP.Text = "Indirizzo IP non valido";
-            } 
-            catch (System.Net.Sockets.SocketException ex) { MetroFramework.MetroMessageBox.Show(this, "\n\nImpossible contattare il server all'indirizzo: "+txtIpServer.Text, "Errore",MessageBoxButtons.OK,MessageBoxIcon.Error); }
-            catch (Exception ex) { MetroFramework.MetroMessageBox.Show(this, "\n\n"+ex.Message, "Errore",MessageBoxButtons.OK,MessageBoxIcon.Error); }
 
+            catch (ArgumentException) { txtIpServer.WithError = true; lblErroreIP.Text = "Indirizzo IP non valido"; }
+            
+            catch (SocketException) { MetroFramework.MetroMessageBox.Show(this, "\n\nImpossible contattare il server all'indirizzo: " + txtIpServer.Text, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            
+            catch (Exception ex) { MetroFramework.MetroMessageBox.Show(this, "\n\n" + ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+        }
+
+        /// <summary>
+        /// Receive from the server the updated shared folder
+        /// </summary>
+        private void ReceiveDirectory()
+        {
+            stream.Read(received, 0, received.Length);
+
+            listBox1.DataSource = JsonConvert.DeserializeObject<List<string>>(encoding.GetString(received));
         }
         private void listBox1_MouseClick(object sender, MouseEventArgs e)
         {
             toDownload = listBox1.GetItemText(listBox1.SelectedItem);
 
-            string send = "download;" + toDownload;
+            string send = "download;£&" + toDownload;
 
             toSend = encoding.GetBytes(send);
 
@@ -77,6 +93,12 @@ namespace TcpFileTransfer
 
             ReciveFile();
         }
+
+        /// <summary>
+        /// Remove the empty parts of a byte array
+        /// </summary>
+        /// <param name="array">array to clear</param>
+        /// <returns>The cleared array</returns>
         private byte[] TrimEnd(byte[] array)
         {
             int lastIndex = Array.FindLastIndex(array, b => b != 0);
@@ -86,6 +108,9 @@ namespace TcpFileTransfer
             return array;
         }
 
+        /// <summary>
+        /// Receive the selected file from the server
+        /// </summary>
         private void ReciveFile()
         {
             received = new Byte[400000];
@@ -94,6 +119,10 @@ namespace TcpFileTransfer
             byte[] toSave = TrimEnd(received);
             saveFile();
         }
+
+        /// <summary>
+        /// Saves the received file from the server
+        /// </summary>
         private void saveFile()
         {
             string[] fileName = toDownload.Split('\\');
@@ -112,7 +141,7 @@ namespace TcpFileTransfer
 
         private void groupBox1_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop, false) == true)
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
             {
                 e.Effect = DragDropEffects.Move;
                 groupBox1.BackgroundImage = TcpFileTransfer.Properties.Resources.drag;
@@ -135,35 +164,40 @@ namespace TcpFileTransfer
         private void btnUpload_Click(object sender, EventArgs e)
         {
             toSend = new byte[400000];
-            string send = "upload;";
+            string send = "upload;£&";
             foreach (string x in dropped)
             {
-                send += x + ";" + File.ReadAllText(x);
+                send += x + ";£&"+ File.ReadAllText(x);
+
                 toSend = encoding.GetBytes(send);
                 toSend = TrimEnd(toSend);
                 stream.Write(toSend, 0, toSend.Length);
+
                 toSend = new byte[400000];
-                if (checkError())
+                if (CheckForErrors())
+                {
                     break;
-                
+                }
             }
         }
-        private bool checkError()
+        /// <summary>
+        /// Check if the server returned an error
+        /// </summary>
+        private bool CheckForErrors()
         {
             received = new Byte[400000];
             stream.Read(received, 0, received.Length);
             string msg = encoding.GetString(received);
             if (msg.Contains("Errore"))
             {
-                MetroFramework.MetroMessageBox.Show(this, "\n\n" + msg, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MetroFramework.MetroMessageBox.Show(this, "\n\n" + msg, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return true;
             }
             else
             {
                 received = TrimEnd(received);
                 string rec = encoding.GetString(received);
-                List<string> elem = JsonConvert.DeserializeObject<List<string>>(encoding.GetString(received));
-                listBox1.DataSource = elem;
+                listBox1.DataSource = JsonConvert.DeserializeObject<List<string>>(encoding.GetString(received));
                 return false;
             }
         }
