@@ -33,6 +33,7 @@ namespace Server
             ToggleFields(Status.Offline);
             btnStart.BackColor = Color.FromArgb(230, 230, 230);
         }
+
         private string sharedDir;
         private TcpListenerEx server;
         private string selectedPath;
@@ -206,6 +207,8 @@ namespace Server
                 {
                     ClientManager.canUpload = true;
                 }
+                else
+                    MetroUploadToggle.Checked = false;
             }
             else
             {
@@ -226,6 +229,7 @@ namespace Server
         {
             UpdateFileExplorer(lastSelected);
         }
+
         #region TreeWiew and ListView management
 
         /// <summary>

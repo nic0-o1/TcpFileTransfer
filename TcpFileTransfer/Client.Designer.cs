@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Client));
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
@@ -37,6 +39,7 @@
             this.btnUpload = new MetroFramework.Controls.MetroTile();
             this.lblIP = new MetroFramework.Controls.MetroLabel();
             this.lblErroreIP = new MetroFramework.Controls.MetroLabel();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
             // listBox1
@@ -51,9 +54,9 @@
             // groupBox1
             // 
             this.groupBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.groupBox1.Location = new System.Drawing.Point(650, 46);
+            this.groupBox1.Location = new System.Drawing.Point(506, 25);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(526, 433);
+            this.groupBox1.Size = new System.Drawing.Size(462, 303);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
@@ -140,7 +143,7 @@
             // btnUpload
             // 
             this.btnUpload.ActiveControl = null;
-            this.btnUpload.Location = new System.Drawing.Point(613, 525);
+            this.btnUpload.Location = new System.Drawing.Point(506, 489);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(111, 42);
             this.btnUpload.TabIndex = 19;
@@ -169,6 +172,13 @@
             this.lblErroreIP.TabIndex = 21;
             this.lblErroreIP.UseCustomBackColor = true;
             this.lblErroreIP.UseCustomForeColor = true;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "folder.png");
+            this.imageList1.Images.SetKeyName(1, "file.png");
             // 
             // Client
             // 
@@ -203,6 +213,7 @@
         private MetroFramework.Controls.MetroTile btnUpload;
         private MetroFramework.Controls.MetroLabel lblIP;
         private MetroFramework.Controls.MetroLabel lblErroreIP;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }
 

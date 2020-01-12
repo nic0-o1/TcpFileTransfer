@@ -28,7 +28,7 @@ namespace Server
 
          
         /// <summary>
-        /// Initializes a new instance of the <see cref="Server.ClientManager"/> class with the client.
+        /// Initializes a new instance of the <see cref="Server.ClientManager"/> class.
         /// </summary>
         /// <param name="client">client to manage</param>
         public ClientManager(TcpClient client)
