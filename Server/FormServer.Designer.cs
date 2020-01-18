@@ -36,6 +36,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.lblDrag = new MetroFramework.Controls.MetroLabel();
             this.lstViewFiles = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -49,7 +50,6 @@
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             this.lblState = new MetroFramework.Controls.MetroLabel();
             this.lblIP = new MetroFramework.Controls.MetroLabel();
-            this.lblDrag = new MetroFramework.Controls.MetroLabel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -114,7 +114,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.lblDrag);
             this.splitContainer1.Panel2.Controls.Add(this.lstViewFiles);
-            this.splitContainer1.Size = new System.Drawing.Size(577, 531);
+            this.splitContainer1.Size = new System.Drawing.Size(577, 516);
             this.splitContainer1.SplitterDistance = 192;
             this.splitContainer1.TabIndex = 11;
             // 
@@ -126,7 +126,7 @@
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
             this.treeView1.SelectedImageIndex = 0;
-            this.treeView1.Size = new System.Drawing.Size(192, 531);
+            this.treeView1.Size = new System.Drawing.Size(192, 516);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
             // 
@@ -136,6 +136,18 @@
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "folder.png");
             this.imageList1.Images.SetKeyName(1, "file.png");
+            // 
+            // lblDrag
+            // 
+            this.lblDrag.AutoSize = true;
+            this.lblDrag.Location = new System.Drawing.Point(110, 355);
+            this.lblDrag.Name = "lblDrag";
+            this.lblDrag.Size = new System.Drawing.Size(125, 19);
+            this.lblDrag.TabIndex = 21;
+            this.lblDrag.Text = "Rilascia per caricare";
+            this.lblDrag.UseCustomBackColor = true;
+            this.lblDrag.UseCustomForeColor = true;
+            this.lblDrag.Visible = false;
             // 
             // lstViewFiles
             // 
@@ -148,7 +160,7 @@
             this.lstViewFiles.HideSelection = false;
             this.lstViewFiles.Location = new System.Drawing.Point(0, 0);
             this.lstViewFiles.Name = "lstViewFiles";
-            this.lstViewFiles.Size = new System.Drawing.Size(381, 531);
+            this.lstViewFiles.Size = new System.Drawing.Size(381, 516);
             this.lstViewFiles.SmallImageList = this.imageList1;
             this.lstViewFiles.TabIndex = 0;
             this.lstViewFiles.UseCompatibleStateImageBehavior = false;
@@ -254,23 +266,11 @@
             // lblIP
             // 
             this.lblIP.AutoSize = true;
-            this.lblIP.Location = new System.Drawing.Point(7, 605);
+            this.lblIP.Location = new System.Drawing.Point(10, 602);
             this.lblIP.Name = "lblIP";
             this.lblIP.Size = new System.Drawing.Size(83, 19);
             this.lblIP.TabIndex = 20;
             this.lblIP.Text = "metroLabel4";
-            // 
-            // lblDrag
-            // 
-            this.lblDrag.AutoSize = true;
-            this.lblDrag.Location = new System.Drawing.Point(115, 381);
-            this.lblDrag.Name = "lblDrag";
-            this.lblDrag.Size = new System.Drawing.Size(125, 19);
-            this.lblDrag.TabIndex = 21;
-            this.lblDrag.Text = "Rilascia per caricare";
-            this.lblDrag.UseCustomBackColor = true;
-            this.lblDrag.UseCustomForeColor = true;
-            this.lblDrag.Visible = false;
             // 
             // FormServer
             // 

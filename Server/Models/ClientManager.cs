@@ -12,21 +12,32 @@ namespace Server
     /// <summary>
     ///<see cref="Server.ClientManager"/> class allows to manage client's connection
     /// </summary>
-    internal class ClientManager
+    public class ClientManager
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
+
+        /// <summary>
+        /// Contains all files in the selected directory
+        /// </summary>
         public static string sharedDir;
+
+        /// <summary>
+        /// The selected path of the shared directory
+        /// </summary>
         public static string selectedPath;
-        public static bool canUpload = false;
+
+        /// <summary>
+        /// It tells whereas the upload is enabled or not 
+        /// </summary>
+        public static bool canUpload;
 
         private readonly TcpClient _tcpClient;
-        private Byte[] toSend = new Byte[400000];
-        private Byte[] received = new Byte[400000];
+        private Byte[] toSend = new Byte[1000000];
+        private readonly Byte[] received = new Byte[1000000];
         private readonly Encoding encoding = Encoding.GetEncoding("Windows-1252");
         private readonly NetworkStream stream;
 
-         
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Server.ClientManager"/> class.
         /// </summary>
@@ -37,6 +48,7 @@ namespace Server
             stream = client.GetStream();
 
             log.Info($"Nuovo client connesso. IP {client.Client.RemoteEndPoint}");
+
         }
 
         /// <summary>
@@ -44,23 +56,23 @@ namespace Server
         /// </summary>
         public void ManageConnection()
         {
-           // try
+            try
             {
-                sendDirectory();
+                SendDirectory();
                 while (true)
                 {
                     readPath();
                 }
             }
-            //catch { }
+            catch { }
 
         }
 
         /// <summary>
         /// Gives the content of a directory with files and subdirectories.
-        /// Removes the path before the actual directory
+        /// Removes the path before the actual directory and send it to tthe client
+        ///<see cref="SendDirectory"/> class for sending the directory 
         /// </summary>
-        /// <returns>JSON with the content of the directories</returns>
         private void InitializeDirectory()
         {
             List<string> files = Directory.GetFiles(selectedPath, "*.*", SearchOption.AllDirectories).ToList();
@@ -70,13 +82,13 @@ namespace Server
 
             sharedDir = JsonConvert.SerializeObject(files);
 
-            sendDirectory();
+            SendDirectory();
         }
 
         /// <summary>
         /// Send the shared directory content
         /// </summary>
-        private void sendDirectory()
+        private void SendDirectory()
         {
             toSend = encoding.GetBytes(sharedDir);
             stream.Write(toSend, 0, toSend.Length);
@@ -87,9 +99,13 @@ namespace Server
         /// </summary>
         private void readPath()
         {
-            Array.Clear(received, 0, received.Length);
-            stream.Read(received, 0, received.Length);
-            checkMessage();
+            try
+            {
+                Array.Clear(received, 0, received.Length);
+                stream.Read(received, 0, received.Length);
+                checkMessage();
+            }
+            catch { }
         }
 
         /// <summary>
@@ -97,7 +113,6 @@ namespace Server
         /// </summary>
         private void checkMessage()
         {
-            received = TrimEnd(received);
             string rec = encoding.GetString(received);
             Array.Clear(toSend, 0, toSend.Length);
 
@@ -108,7 +123,8 @@ namespace Server
                 toSend = File.ReadAllBytes(Path.Combine(selectedPath, path[1]));
                 stream.Write(toSend, 0, toSend.Length);
 
-                log.Info($"Download file: {path[1]} IP {_tcpClient.Client.RemoteEndPoint}");
+                log.Warn($"Download file: {path[1]} IP {_tcpClient.Client.RemoteEndPoint}");
+
             }
             else if (path[0].Contains("upload"))
             {
@@ -127,7 +143,15 @@ namespace Server
                     stream.Write(toSend, 0, toSend.Length);
                 }
             }
+            else if (path[0].Contains("Directory"))
+            {
+                InitializeDirectory();
+
+            }
         }
+
+
+
 
         /// <summary>
         /// Save the client's file and send the updated directory information
@@ -137,9 +161,10 @@ namespace Server
         {
             string[] val = path[1].Split('\\');
 
-            File.WriteAllText(Path.Combine(selectedPath, val[val.Length - 1]), path[2]);
+            File.WriteAllBytes(Path.Combine(selectedPath, val[val.Length - 2]), encoding.GetBytes(path[2]));
 
-            log.Info($"Caricato file: {val[val.Length - 1]} IP {_tcpClient.Client.RemoteEndPoint}");
+            log.Info($"Caricato file: {val[val.Length - 2]} IP {_tcpClient.Client.RemoteEndPoint}");
+
 
             InitializeDirectory();
         }
