@@ -51,14 +51,16 @@ namespace TcpFileTransfer
             {
                 case Status.Online:
                     {
+                        txtIpServer.Clear();
                         btnDisconnect.Enabled = true;
                         lstBoxFile.Enabled = true;
                         btnUpload.Enabled = true;
+                        picReload.Enabled = true;
                         btnConnect.Enabled = false;
+                        btnUpload.ForeColor = Color.White;
                         btnConnect.BackColor = Color.FromArgb(230, 230, 230);
                         btnDisconnect.BackColor = Color.FromArgb(255, 128, 128);
                         btnUpload.BackColor = SystemColors.MenuHighlight;
-                        btnUpload.ForeColor = Color.White;
                         break;
                     }
                 case Status.Offline:
@@ -66,10 +68,11 @@ namespace TcpFileTransfer
                         btnDisconnect.Enabled = false;
                         btnUpload.Enabled = false;
                         lstBoxFile.Enabled = false;
+                        picReload.Enabled = false;
                         btnConnect.Enabled = true;
-                        btnDisconnect.BackColor = Color.FromArgb(230, 230, 230);
-                        btnConnect.BackColor = Color.FromArgb(128, 255, 128);
                         btnUpload.BackColor = Color.FromArgb(230, 230, 230);
+                        btnConnect.BackColor = Color.FromArgb(128, 255, 128);
+                        btnDisconnect.BackColor = Color.FromArgb(230, 230, 230);
                         btnUpload.ForeColor = SystemColors.ControlText;
                         break;
                     }
@@ -85,9 +88,9 @@ namespace TcpFileTransfer
         /// <exception cref="ArgumentException">Thrown when the ip address is not correct</exception>
         private void CheckIP(string toCheck)
         {
-            if (!IPAddress.TryParse(toCheck, out IPAddress ip))
+            if (!IPAddress.TryParse(toCheck, out _))
             {
-                throw new ArgumentException("Indirizzo ip non valido");
+                throw new ArgumentException("Indirizzo IP non valido");
             }
         }
 
@@ -121,9 +124,9 @@ namespace TcpFileTransfer
                 ToggleFields(Status.Online);
             }
 
-            catch (ArgumentException) { txtIpServer.WithError = true; lblErroreIP.Text = "Indirizzo IP non valido"; }
+            catch (ArgumentException) { lblErroreIP.Visible = true; txtIpServer.WithError = true; lblErroreIP.Text = "Indirizzo IP non valido"; }
 
-            catch (SocketException) { MetroFramework.MetroMessageBox.Show(this, "\n\nImpossible contattare il server all'indirizzo: " + txtIpServer.Text, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (SocketException) { txtIpServer.Clear(); MetroFramework.MetroMessageBox.Show(this, "\n\nImpossible contattare il server all'indirizzo: " + txtIpServer.Text, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
             catch (Exception ex) { MetroFramework.MetroMessageBox.Show(this, "\n\n" + ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
@@ -151,7 +154,7 @@ namespace TcpFileTransfer
             t.Start();
         }
 
-        private void listBox1_MouseClick(object sender, MouseEventArgs e)
+        private void lstBoxFile_MouseClick(object sender, MouseEventArgs e)
         {
             toSend = new Byte[1000000];
             toDownload = lstBoxFile.GetItemText(lstBoxFile.SelectedItem);
@@ -215,7 +218,7 @@ namespace TcpFileTransfer
             }
         }
 
-        private void groupBox1_DragEnter(object sender, DragEventArgs e)
+        private void lstFileToUpload_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
             {
@@ -225,7 +228,7 @@ namespace TcpFileTransfer
         }
 
         private readonly List<string> dropped = new List<string>();
-        private void groupBox1_DragDrop(object sender, DragEventArgs e)
+        private void lstFileToUpload_DragDrop(object sender, DragEventArgs e)
         {
             string[] items = (string[])e.Data.GetData(DataFormats.FileDrop);
 
@@ -242,7 +245,7 @@ namespace TcpFileTransfer
             lstFileToUpload.BackColor = Color.White;
         }
 
-        private void groupBox1_DragLeave(object sender, EventArgs e)
+        private void lstFileToUpload_DragLeave(object sender, EventArgs e)
         {
             lstFileToUpload.BackColor = Color.White;
         }

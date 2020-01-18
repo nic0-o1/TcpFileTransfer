@@ -294,7 +294,7 @@
             this.Name = "FormServer";
             this.Resizable = false;
             this.Style = MetroFramework.MetroColorStyle.Lime;
-            this.Text = "TCP HFS Server";
+            this.Text = "TCP Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormServer_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

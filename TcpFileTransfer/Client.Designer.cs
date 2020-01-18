@@ -128,7 +128,7 @@
             this.btnUpload.ActiveControl = null;
             this.btnUpload.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.btnUpload.ForeColor = System.Drawing.Color.White;
-            this.btnUpload.Location = new System.Drawing.Point(472, 438);
+            this.btnUpload.Location = new System.Drawing.Point(438, 438);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(111, 42);
             this.btnUpload.TabIndex = 19;
@@ -166,7 +166,7 @@
             this.metroLabel2.AutoSize = true;
             this.metroLabel2.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.metroLabel2.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-            this.metroLabel2.Location = new System.Drawing.Point(711, 73);
+            this.metroLabel2.Location = new System.Drawing.Point(658, 73);
             this.metroLabel2.Name = "metroLabel2";
             this.metroLabel2.Size = new System.Drawing.Size(91, 25);
             this.metroLabel2.TabIndex = 22;
@@ -177,7 +177,7 @@
             this.metroLabel3.AutoSize = true;
             this.metroLabel3.FontSize = MetroFramework.MetroLabelSize.Tall;
             this.metroLabel3.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-            this.metroLabel3.Location = new System.Drawing.Point(456, 73);
+            this.metroLabel3.Location = new System.Drawing.Point(422, 73);
             this.metroLabel3.Name = "metroLabel3";
             this.metroLabel3.Size = new System.Drawing.Size(127, 25);
             this.metroLabel3.TabIndex = 24;
@@ -188,11 +188,11 @@
             this.lstBoxFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstBoxFile.FormattingEnabled = true;
             this.lstBoxFile.ItemHeight = 20;
-            this.lstBoxFile.Location = new System.Drawing.Point(661, 115);
+            this.lstBoxFile.Location = new System.Drawing.Point(627, 115);
             this.lstBoxFile.Name = "lstBoxFile";
             this.lstBoxFile.Size = new System.Drawing.Size(412, 304);
             this.lstBoxFile.TabIndex = 0;
-            this.lstBoxFile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseClick);
+            this.lstBoxFile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lstBoxFile_MouseClick);
             // 
             // lstFileToUpload
             // 
@@ -201,7 +201,7 @@
             this.columnHeader1});
             this.lstFileToUpload.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstFileToUpload.HideSelection = false;
-            this.lstFileToUpload.Location = new System.Drawing.Point(456, 115);
+            this.lstFileToUpload.Location = new System.Drawing.Point(422, 115);
             this.lstFileToUpload.Name = "lstFileToUpload";
             this.lstFileToUpload.Size = new System.Drawing.Size(205, 304);
             this.lstFileToUpload.SmallImageList = this.imageList1;
@@ -209,9 +209,9 @@
             this.lstFileToUpload.UseCompatibleStateImageBehavior = false;
             this.lstFileToUpload.View = System.Windows.Forms.View.Details;
             this.lstFileToUpload.SelectedIndexChanged += new System.EventHandler(this.lstFileToUpload_SelectedIndexChanged);
-            this.lstFileToUpload.DragDrop += new System.Windows.Forms.DragEventHandler(this.groupBox1_DragDrop);
-            this.lstFileToUpload.DragEnter += new System.Windows.Forms.DragEventHandler(this.groupBox1_DragEnter);
-            this.lstFileToUpload.DragLeave += new System.EventHandler(this.groupBox1_DragLeave);
+            this.lstFileToUpload.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstFileToUpload_DragDrop);
+            this.lstFileToUpload.DragEnter += new System.Windows.Forms.DragEventHandler(this.lstFileToUpload_DragEnter);
+            this.lstFileToUpload.DragLeave += new System.EventHandler(this.lstFileToUpload_DragLeave);
             this.lstFileToUpload.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lstFileToUpload_MouseClick);
             // 
             // columnHeader1
@@ -230,7 +230,7 @@
             this.picReload.BackgroundImage = global::TcpFileTransfer.Properties.Resources.reload_;
             this.picReload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.picReload.Cursor = System.Windows.Forms.Cursors.Default;
-            this.picReload.Location = new System.Drawing.Point(661, 79);
+            this.picReload.Location = new System.Drawing.Point(627, 79);
             this.picReload.Name = "picReload";
             this.picReload.Size = new System.Drawing.Size(25, 19);
             this.picReload.TabIndex = 27;
@@ -241,7 +241,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1267, 679);
+            this.ClientSize = new System.Drawing.Size(1081, 628);
             this.Controls.Add(this.picReload);
             this.Controls.Add(this.lstFileToUpload);
             this.Controls.Add(this.lstBoxFile);
@@ -256,7 +256,9 @@
             this.Controls.Add(this.metroLabel1);
             this.MaximizeBox = false;
             this.Name = "Client";
-            this.Text = "HFS TCP Client";
+            this.Resizable = false;
+            this.Style = MetroFramework.MetroColorStyle.Lime;
+            this.Text = "TCP Client";
             ((System.ComponentModel.ISupportInitialize)(this.picReload)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
