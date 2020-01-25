@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Server.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,11 @@ namespace Server
     public class ClientManager
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event EventHandler<ClientEventArgs> ClientEvent;
 
         /// <summary>
         /// Contains all files in the selected directory
@@ -56,6 +62,7 @@ namespace Server
         /// </summary>
         public void ManageConnection()
         {
+            ClientEvent?.Invoke(this, new ClientEventArgs(_tcpClient.Client.LocalEndPoint, "Connesso")); //l'invoke non può essere messo nel costruttore(l'evento è ancora null)
             try
             {
                 SendDirectory();
@@ -125,6 +132,8 @@ namespace Server
 
                 log.Warn($"Download file: {path[1]} IP {_tcpClient.Client.RemoteEndPoint}");
 
+                ClientEvent?.Invoke(this, new ClientEventArgs(_tcpClient.Client.LocalEndPoint, "Download", path[1]));
+
             }
             else if (path[0].Contains("upload"))
             {
@@ -161,9 +170,11 @@ namespace Server
         {
             string[] val = path[1].Split('\\');
 
-            File.WriteAllBytes(Path.Combine(selectedPath, val[val.Length - 2]), encoding.GetBytes(path[2]));
+            File.WriteAllBytes(Path.Combine(selectedPath, val[val.Length - 1]), encoding.GetBytes(path[2]));
 
-            log.Info($"Caricato file: {val[val.Length - 2]} IP {_tcpClient.Client.RemoteEndPoint}");
+            log.Info($"Caricato file: {val[val.Length - 1]} IP {_tcpClient.Client.RemoteEndPoint}");
+
+            ClientEvent?.Invoke(this, new ClientEventArgs(_tcpClient.Client.RemoteEndPoint, "Upload", val[val.Length - 1]));
 
 
             InitializeDirectory();

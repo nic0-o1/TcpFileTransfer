@@ -1,7 +1,9 @@
-﻿//Rosati-Nicolò Server-TCP file transfer
+﻿
+//Rosati-Nicolò Server-TCP file transfer
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -28,10 +30,10 @@ namespace Server
         public FormServer()
         {
             InitializeComponent();
-            CheckForIllegalCrossThreadCalls = false;
-            log4net.Config.XmlConfigurator.Configure();
-            lblIP.Text = "Indirizzo IP: " + GetIP();
             ToggleFields(Status.Offline);
+            CheckForIllegalCrossThreadCalls = false;
+            lblIP.Text = "Indirizzo IP: " + GetIP();
+            log4net.Config.XmlConfigurator.Configure();
             btnStart.BackColor = Color.FromArgb(230, 230, 230);
             btnStart.Enabled = false;
 
@@ -150,6 +152,8 @@ namespace Server
                 {
                     TcpClient client = server.AcceptTcpClient();
                     ClientManager clientManager = new ClientManager(client);
+                    clientManager.ClientEvent += ClientManager_ClientEvent;
+
                     Thread clientThread = new Thread(new ThreadStart(clientManager.ManageConnection))
                     {
                         IsBackground = true
@@ -159,6 +163,15 @@ namespace Server
                 }
             }
             catch { }
+        }
+
+        private void ClientManager_ClientEvent(object sender, Models.ClientEventArgs e)
+        {
+
+            lstBoxLog.DataSource = null;
+            lstBoxLog.DataSource = e.Logs;
+
+
         }
 
         private void btnStart_Click(object sender, EventArgs e)

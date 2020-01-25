@@ -50,6 +50,7 @@
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             this.lblState = new MetroFramework.Controls.MetroLabel();
             this.lblIP = new MetroFramework.Controls.MetroLabel();
+            this.lstBoxLog = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -272,12 +273,23 @@
             this.lblIP.TabIndex = 20;
             this.lblIP.Text = "metroLabel4";
             // 
+            // lstBoxLog
+            // 
+            this.lstBoxLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstBoxLog.FormattingEnabled = true;
+            this.lstBoxLog.ItemHeight = 16;
+            this.lstBoxLog.Location = new System.Drawing.Point(12, 451);
+            this.lstBoxLog.Name = "lstBoxLog";
+            this.lstBoxLog.Size = new System.Drawing.Size(287, 100);
+            this.lstBoxLog.TabIndex = 21;
+            // 
             // FormServer
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1081, 628);
+            this.Controls.Add(this.lstBoxLog);
             this.Controls.Add(this.lblIP);
             this.Controls.Add(this.lblState);
             this.Controls.Add(this.metroLabel3);
@@ -328,6 +340,7 @@
         private MetroFramework.Controls.MetroLabel lblState;
         private MetroFramework.Controls.MetroLabel lblIP;
         private MetroFramework.Controls.MetroLabel lblDrag;
+        private System.Windows.Forms.ListBox lstBoxLog;
     }
 }
 

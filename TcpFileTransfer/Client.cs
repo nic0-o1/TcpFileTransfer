@@ -80,7 +80,7 @@ namespace TcpFileTransfer
                     throw new InvalidOperationException("Status not found");
             }
         }
-        
+
         /// <summary>
         /// Check if an ip address is correct
         /// </summary>
@@ -204,16 +204,21 @@ namespace TcpFileTransfer
         private void SaveFile()
         {
             string[] fileName = toDownload.Split('\\');
+            string[] fileInfo = fileName[fileName.Length - 1].Split('.');
 
-            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            using (SaveFileDialog sfd = new SaveFileDialog())
             {
-                fbd.Description = "Seleziona cartella di destinazione";
-                DialogResult result = fbd.ShowDialog();
+                sfd.Title = "Seleziona cartella di destinazione";
+                sfd.Filter = "Tutti i file (*.*)|*.*";
+                sfd.FileName = fileInfo[0];
+                sfd.DefaultExt = fileInfo[1];
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                DialogResult result = sfd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(sfd.FileName))
                 {
                     byte[] toSave = TrimEnd(received);
-                    File.WriteAllBytes(fbd.SelectedPath + "\\" + fileName[fileName.Length - 1], toSave);
+                    File.WriteAllBytes(sfd.FileName, toSave);
                 }
             }
         }
@@ -262,7 +267,7 @@ namespace TcpFileTransfer
             return fileData;
         }
 
-        
+
 
         private void btnUpload_Click(object sender, EventArgs e)
         {

@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ClientEventArgs.cs" />
     <Compile Include="Models\ClientManager.cs" />
     <Compile Include="FormServer.cs">
       <SubType>Form</SubType>
@@ -70,6 +71,7 @@
     <Compile Include="FormServer.Designer.cs">
       <DependentUpon>FormServer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\TcpListenerEx.cs" />
