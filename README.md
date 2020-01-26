@@ -16,10 +16,10 @@ Requirements
 Screenshots
 ----------
 *Server*
-![Server](https://pasteboard.co/IROdnMH.png)
-![Server Online](https://imgur.com/TfnEw7F)
+![Server](https://github.com/nic0-o1/TcpFileTransfer/blob/master/Server/Screenshots/Server.png)
+![Server Online](https://github.com/nic0-o1/TcpFileTransfer/blob/master/Server/Screenshots/ServerOnline.png)
 
 *Client*
 
-![Client](https://imgur.com/pcSpUGx)
-![Client Online](https://imgur.com/cLCs9ER)
+![Client](https://github.com/nic0-o1/TcpFileTransfer/blob/master/TcpFileTransfer/Screenshots/Client.png)
+![Client Online](https://github.com/nic0-o1/TcpFileTransfer/blob/master/TcpFileTransfer/Screenshots/ClientOnline.png)
