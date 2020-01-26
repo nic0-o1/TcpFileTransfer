@@ -11,6 +11,7 @@ Requirements
 
 * [MetroFramework](https://github.com/thielj/MetroFramework) - The form framework used
 * [log4net](https://logging.apache.org/log4net/) - Logs Management
+* [ Newtonsoft JSON](https://www.newtonsoft.com/json) - Data format used
 
 
 Screenshots
