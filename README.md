@@ -14,13 +14,12 @@ Requirements
 * [ Newtonsoft JSON](https://www.newtonsoft.com/json) - Data format used
 
 
-Screenshots
-----------
-*Server*
+## Screenshots
+### *Server*
 ![Server](https://github.com/nic0-o1/TcpFileTransfer/blob/master/Server/Screenshots/Server.png)
 ![Server Online](https://github.com/nic0-o1/TcpFileTransfer/blob/master/Server/Screenshots/ServerOnline.png)
 
-*Client*
+### *Client*
 
 ![Client](https://github.com/nic0-o1/TcpFileTransfer/blob/master/TcpFileTransfer/Screenshots/Client.png)
 ![Client Online](https://github.com/nic0-o1/TcpFileTransfer/blob/master/TcpFileTransfer/Screenshots/ClientOnline.png)
