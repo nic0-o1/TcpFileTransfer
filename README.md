@@ -16,7 +16,7 @@ Requirements
 Screenshots
 ----------
 *Server*
-![Server](https://imgur.com/lulhsAo)
+![Server](https://pasteboard.co/IROdnMH.png)
 ![Server Online](https://imgur.com/TfnEw7F)
 
 *Client*
