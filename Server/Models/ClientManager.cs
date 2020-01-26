@@ -18,9 +18,11 @@ namespace Server
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// 
+        /// Event for handling client's action
         /// </summary>
         public event EventHandler<ClientEventArgs> ClientEvent;
+
+        public event EventHandler<EventArgs> ContentUdateEvent;
 
         /// <summary>
         /// Contains all files in the selected directory
@@ -170,12 +172,13 @@ namespace Server
         {
             string[] val = path[1].Split('\\');
 
-            File.WriteAllBytes(Path.Combine(selectedPath, val[val.Length - 1]), encoding.GetBytes(path[2]));
+            File.WriteAllBytes(Path.Combine(selectedPath, val[val.Length - 1]), TrimEnd(encoding.GetBytes(path[2])));
 
             log.Info($"Caricato file: {val[val.Length - 1]} IP {_tcpClient.Client.RemoteEndPoint}");
 
             ClientEvent?.Invoke(this, new ClientEventArgs(_tcpClient.Client.RemoteEndPoint, "Upload", val[val.Length - 1]));
 
+            ContentUdateEvent?.Invoke(this, new EventArgs());
 
             InitializeDirectory();
         }

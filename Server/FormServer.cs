@@ -16,7 +16,7 @@ using System.Windows.Forms;
 namespace Server
 {
     /// <summary>
-    /// File transfer over TCP.
+    /// File transfer over TCP. Server side
     /// </summary>
     public partial class FormServer : MetroFramework.Forms.MetroForm
     {
@@ -153,6 +153,7 @@ namespace Server
                     TcpClient client = server.AcceptTcpClient();
                     ClientManager clientManager = new ClientManager(client);
                     clientManager.ClientEvent += ClientManager_ClientEvent;
+                    clientManager.ContentUdateEvent += ClientManager_ContentUdateEvent;
 
                     Thread clientThread = new Thread(new ThreadStart(clientManager.ManageConnection))
                     {
@@ -163,6 +164,12 @@ namespace Server
                 }
             }
             catch { }
+        }
+
+        private void ClientManager_ContentUdateEvent(object sender, EventArgs e)
+        {
+            if (lastSelected != null)
+                UpdateFileExplorer(lastSelected);
         }
 
         private void ClientManager_ClientEvent(object sender, Models.ClientEventArgs e)

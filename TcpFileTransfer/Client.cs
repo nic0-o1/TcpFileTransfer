@@ -13,6 +13,9 @@ using System.Windows.Forms;
 
 namespace TcpFileTransfer
 {
+    /// <summary>
+    /// File transfer over TCP. Client side
+    /// </summary>
     public partial class Client : MetroFramework.Forms.MetroForm
     {
         private enum Status { Online, Offline }
