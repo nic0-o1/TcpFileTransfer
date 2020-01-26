@@ -35,7 +35,6 @@
             this.btnDisconnect = new MetroFramework.Controls.MetroTile();
             this.btnConnect = new MetroFramework.Controls.MetroTile();
             this.btnUpload = new MetroFramework.Controls.MetroTile();
-            this.lblIP = new MetroFramework.Controls.MetroLabel();
             this.lblErroreIP = new MetroFramework.Controls.MetroLabel();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
@@ -44,6 +43,7 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.picReload = new System.Windows.Forms.PictureBox();
+            this.lblIP = new MetroFramework.Controls.MetroLabel();
             ((System.ComponentModel.ISupportInitialize)(this.picReload)).BeginInit();
             this.SuspendLayout();
             // 
@@ -141,14 +141,6 @@
             this.btnUpload.UseSelectable = true;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
-            // lblIP
-            // 
-            this.lblIP.AutoSize = true;
-            this.lblIP.Location = new System.Drawing.Point(1, 660);
-            this.lblIP.Name = "lblIP";
-            this.lblIP.Size = new System.Drawing.Size(0, 0);
-            this.lblIP.TabIndex = 20;
-            // 
             // lblErroreIP
             // 
             this.lblErroreIP.AutoSize = true;
@@ -237,18 +229,28 @@
             this.picReload.TabStop = false;
             this.picReload.Click += new System.EventHandler(this.picReload_Click);
             // 
+            // lblIP
+            // 
+            this.lblIP.AutoSize = true;
+            this.lblIP.Location = new System.Drawing.Point(3, 601);
+            this.lblIP.Name = "lblIP";
+            this.lblIP.Size = new System.Drawing.Size(83, 19);
+            this.lblIP.TabIndex = 28;
+            this.lblIP.Text = "metroLabel4";
+            this.lblIP.Visible = false;
+            // 
             // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1081, 628);
+            this.Controls.Add(this.lblIP);
             this.Controls.Add(this.picReload);
             this.Controls.Add(this.lstFileToUpload);
             this.Controls.Add(this.lstBoxFile);
             this.Controls.Add(this.metroLabel3);
             this.Controls.Add(this.metroLabel2);
             this.Controls.Add(this.lblErroreIP);
-            this.Controls.Add(this.lblIP);
             this.Controls.Add(this.btnUpload);
             this.Controls.Add(this.btnDisconnect);
             this.Controls.Add(this.btnConnect);
@@ -271,7 +273,6 @@
         private MetroFramework.Controls.MetroTile btnDisconnect;
         private MetroFramework.Controls.MetroTile btnConnect;
         private MetroFramework.Controls.MetroTile btnUpload;
-        private MetroFramework.Controls.MetroLabel lblIP;
         private MetroFramework.Controls.MetroLabel lblErroreIP;
         private MetroFramework.Controls.MetroLabel metroLabel2;
         private MetroFramework.Controls.MetroLabel metroLabel3;
@@ -280,6 +281,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.PictureBox picReload;
+        private MetroFramework.Controls.MetroLabel lblIP;
     }
 }
 

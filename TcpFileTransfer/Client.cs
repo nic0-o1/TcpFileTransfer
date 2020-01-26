@@ -55,10 +55,11 @@ namespace TcpFileTransfer
                 case Status.Online:
                     {
                         txtIpServer.Clear();
-                        btnDisconnect.Enabled = true;
-                        lstBoxFile.Enabled = true;
-                        btnUpload.Enabled = true;
+                        lblIP.Visible = true;
                         picReload.Enabled = true;
+                        btnUpload.Enabled = true;
+                        lstBoxFile.Enabled = true;
+                        btnDisconnect.Enabled = true;
                         btnConnect.Enabled = false;
                         btnUpload.ForeColor = Color.White;
                         btnConnect.BackColor = Color.FromArgb(230, 230, 230);
@@ -72,6 +73,7 @@ namespace TcpFileTransfer
                         btnUpload.Enabled = false;
                         lstBoxFile.Enabled = false;
                         picReload.Enabled = false;
+                        lblIP.Visible = false;
                         btnConnect.Enabled = true;
                         btnUpload.BackColor = Color.FromArgb(230, 230, 230);
                         btnConnect.BackColor = Color.FromArgb(128, 255, 128);
