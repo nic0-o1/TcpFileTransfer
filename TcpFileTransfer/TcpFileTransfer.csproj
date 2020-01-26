@@ -104,5 +104,8 @@
   <ItemGroup>
     <None Include="Resources\reload_.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Screenshots\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
