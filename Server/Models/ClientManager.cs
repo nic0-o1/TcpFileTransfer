@@ -133,6 +133,7 @@ namespace Server
             if (path[0].Contains("download"))
             {
                 toSend = File.ReadAllBytes(Path.Combine(selectedPath, path[1]));
+
                 stream.Write(toSend, 0, toSend.Length);
 
                 log.Warn($"Download file: {path[1]} IP {_tcpClient.Client.RemoteEndPoint}");

@@ -36,7 +36,7 @@ namespace Server.Models
             Upload,
 
             /// <summary>
-            /// Used fpr logging file download 
+            /// Used for logging file download 
             /// </summary>
             Download
 

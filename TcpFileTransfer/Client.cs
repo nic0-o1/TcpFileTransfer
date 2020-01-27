@@ -62,9 +62,9 @@ namespace TcpFileTransfer
                         btnDisconnect.Enabled = true;
                         btnConnect.Enabled = false;
                         btnUpload.ForeColor = Color.White;
+                        btnUpload.BackColor = SystemColors.MenuHighlight;
                         btnConnect.BackColor = Color.FromArgb(230, 230, 230);
                         btnDisconnect.BackColor = Color.FromArgb(255, 128, 128);
-                        btnUpload.BackColor = SystemColors.MenuHighlight;
                         break;
                     }
                 case Status.Offline:
@@ -260,6 +260,11 @@ namespace TcpFileTransfer
             lstFileToUpload.BackColor = Color.White;
         }
 
+        /// <summary>
+        /// Converts a file into byte array
+        /// </summary>
+        /// <param name="fileName">path of the file</param>
+        /// <returns></returns>
         private byte[] FileToByteArray(string fileName)
         {
             byte[] fileData = null;
@@ -286,8 +291,7 @@ namespace TcpFileTransfer
 
 
                 toSend = encoding.GetBytes(send);
-
-                //System.Buffer.BlockCopy(temp, 0, toSend, 0, temp.Length);
+                
 
                 byte[] rv = toSend.Concat(temp).ToArray();
 
@@ -295,6 +299,7 @@ namespace TcpFileTransfer
                 stream.Write(rv, 0, rv.Length);
 
                 toSend = new byte[1000000];
+
                 if (CheckForErrors())
                 {
                     break;
@@ -334,7 +339,6 @@ namespace TcpFileTransfer
             else
             {
                 received = TrimEnd(received);
-                string rec = encoding.GetString(received);
                 lstBoxFile.DataSource = JsonConvert.DeserializeObject<List<string>>(encoding.GetString(received));
                 return false;
             }
