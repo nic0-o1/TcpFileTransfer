@@ -153,7 +153,7 @@ namespace Server
                     TcpClient client = server.AcceptTcpClient();
                     ClientManager clientManager = new ClientManager(client);
                     clientManager.ClientEvent += ClientManager_ClientEvent;
-                    clientManager.ContentUdateEvent += ClientManager_ContentUdateEvent;
+                    clientManager.ContentUpdateEvent += ClientManager_ContentUdateEvent;
 
                     Thread clientThread = new Thread(new ThreadStart(clientManager.ManageConnection))
                     {

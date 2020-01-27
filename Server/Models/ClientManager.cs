@@ -22,7 +22,10 @@ namespace Server
         /// </summary>
         public event EventHandler<ClientEventArgs> ClientEvent;
 
-        public event EventHandler<EventArgs> ContentUdateEvent;
+        /// <summary>
+        /// Event for handling client's upload action
+        /// </summary>
+        public event EventHandler<EventArgs> ContentUpdateEvent;
 
         /// <summary>
         /// Contains all files in the selected directory
@@ -178,7 +181,7 @@ namespace Server
 
             ClientEvent?.Invoke(this, new ClientEventArgs(_tcpClient.Client.RemoteEndPoint, "Upload", val[val.Length - 1]));
 
-            ContentUdateEvent?.Invoke(this, new EventArgs());
+            ContentUpdateEvent?.Invoke(this, new EventArgs());
 
             InitializeDirectory();
         }
