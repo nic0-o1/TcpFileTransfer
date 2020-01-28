@@ -69,7 +69,7 @@ namespace Server
         /// </summary>
         public void ManageConnection()
         {
-            ClientEvent?.Invoke(this, new ClientEventArgs(_tcpClient.Client.LocalEndPoint, "Connesso")); //l'invoke non può essere messo nel costruttore(l'evento è ancora null)
+            ClientEvent?.Invoke(this, new ClientEventArgs(_tcpClient.Client.RemoteEndPoint, "Connesso")); //l'invoke non può essere messo nel costruttore(l'evento è ancora null)
             try
             {
                 SendDirectory();
@@ -85,7 +85,11 @@ namespace Server
 
         private void FormServer_testEvent(object sender, EventArgs e)
         {
-            _tcpClient.Client.Shutdown(SocketShutdown.Both);
+            //_tcpClient.Client.Shutdown(SocketShutdown.Both);
+
+            Array.Clear(toSend, 0, toSend.Length);
+            toSend = encoding.GetBytes("disconnection");
+            stream.Write(toSend, 0, toSend.Length);
         }
 
         /// <summary>
@@ -146,7 +150,7 @@ namespace Server
 
                 log.Warn($"Download file: {path[1]} IP {_tcpClient.Client.RemoteEndPoint}");
 
-                ClientEvent?.Invoke(this, new ClientEventArgs(_tcpClient.Client.LocalEndPoint, "Download", path[1]));
+                ClientEvent?.Invoke(this, new ClientEventArgs(_tcpClient.Client.RemoteEndPoint, "Download", path[1]));
 
             }
             else if (path[0].Contains("upload"))
@@ -169,7 +173,6 @@ namespace Server
             else if (path[0].Contains("Directory"))
             {
                 InitializeDirectory();
-
             }
         }
 

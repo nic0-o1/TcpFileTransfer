@@ -74,6 +74,7 @@ namespace TcpFileTransfer
                         picReload.Enabled = false;
                         lblIP.Visible = false;
                         btnConnect.Enabled = true;
+                        lstBoxFile.Items.Clear();
                         btnUpload.BackColor = Color.FromArgb(230, 230, 230);
                         btnConnect.BackColor = Color.FromArgb(128, 255, 128);
                         btnDisconnect.BackColor = Color.FromArgb(230, 230, 230);
@@ -160,7 +161,7 @@ namespace TcpFileTransfer
 
         private void lstBoxFile_MouseClick(object sender, MouseEventArgs e)
         {
-            if (stream.DataAvailable && server.Connected)
+            if (server.Connected )
             {
                 toSend = new Byte[1000000];
                 toDownload = lstBoxFile.GetItemText(lstBoxFile.SelectedItem);
@@ -204,15 +205,22 @@ namespace TcpFileTransfer
         /// </summary>
         private void ReciveFile()
         {
-            if (server.Connected)
+            try
             {
                 received = new Byte[1000000];
                 toSend = new Byte[1000000];
                 stream.Read(received, 0, received.Length);
                 byte[] toSave = TrimEnd(received);
-                SaveFile();
+
+                string content = encoding.GetString(toSave);
+                if (content.Contains("disconnection"))
+                {
+                    server.Client.Close();
+                }
+                else
+                    SaveFile();
             }
-            else
+            catch (System.IO.IOException)
             {
                 Console.Write("block");
             }
