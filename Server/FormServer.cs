@@ -134,6 +134,8 @@ namespace Server
             return JsonConvert.SerializeObject(files);
         }
 
+        public static event EventHandler<EventArgs>testEvent;
+
         /// <summary>
         /// Starts the TCP server
         /// </summary>
@@ -141,7 +143,7 @@ namespace Server
         /// <exception cref="SocketException"></exception>
         private void StartServer(object portObj)
         {
-            try
+            //try
             {
                 int port = Convert.ToInt32(portObj);
                 server = new TcpListenerEx(IPAddress.Parse(GetIP()), port);
@@ -150,20 +152,26 @@ namespace Server
 
                 while (server.Active)
                 {
-                    TcpClient client = server.AcceptTcpClient();
-                    ClientManager clientManager = new ClientManager(client);
-                    clientManager.ClientEvent += ClientManager_ClientEvent;
-                    clientManager.ContentUpdateEvent += ClientManager_ContentUdateEvent;
-
-                    Thread clientThread = new Thread(new ThreadStart(clientManager.ManageConnection))
+                    try
                     {
-                        IsBackground = true
-                    };
 
-                    clientThread.Start();
+                        TcpClient client = server.AcceptTcpClient();
+                        ClientManager clientManager = new ClientManager(client);
+                        clientManager.ClientEvent += ClientManager_ClientEvent;
+                        clientManager.ContentUpdateEvent += ClientManager_ContentUdateEvent;
+
+                        Thread clientThread = new Thread(new ThreadStart(clientManager.ManageConnection))
+                        {
+                            IsBackground = true
+                        };
+
+                        clientThread.Start();
+                    }
+                    catch { }
+                    
                 }
             }
-            catch { }
+            //catch { }
         }
 
         private void ClientManager_ContentUdateEvent(object sender, EventArgs e)
@@ -246,6 +254,7 @@ namespace Server
             if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nProcedere con lo spegnimento del server ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 server.Stop();
+                testEvent?.Invoke(this, new EventArgs());
                 ToggleFields(Status.Offline);
             }
         }

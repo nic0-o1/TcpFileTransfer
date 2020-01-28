@@ -17,6 +17,8 @@ namespace Server
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+
+        bool canRead = true;
         /// <summary>
         /// Event for handling client's action
         /// </summary>
@@ -71,13 +73,20 @@ namespace Server
             try
             {
                 SendDirectory();
-                while (true)
+                FormServer.testEvent += FormServer_testEvent;
+                while (canRead)
                 {
                     readPath();
                 }
             }
             catch { }
 
+        }
+
+        private void FormServer_testEvent(object sender, EventArgs e)
+        {
+            _tcpClient.Client.Shutdown(SocketShutdown.Both);
+            Console.WriteLine("close");
         }
 
         /// <summary>
@@ -117,7 +126,7 @@ namespace Server
                 stream.Read(received, 0, received.Length);
                 checkMessage();
             }
-            catch { }
+            catch(System.IO.IOException) { canRead = false;  Console.WriteLine("excp"); }
         }
 
         /// <summary>

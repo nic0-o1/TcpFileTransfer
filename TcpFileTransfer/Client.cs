@@ -54,7 +54,6 @@ namespace TcpFileTransfer
             {
                 case Status.Online:
                     {
-                        txtIpServer.Clear();
                         lblIP.Visible = true;
                         picReload.Enabled = true;
                         btnUpload.Enabled = true;
@@ -131,7 +130,7 @@ namespace TcpFileTransfer
 
             catch (ArgumentException) { lblErroreIP.Visible = true; txtIpServer.WithError = true; lblErroreIP.Text = "Indirizzo IP non valido"; }
 
-            catch (SocketException) { txtIpServer.Clear(); MetroFramework.MetroMessageBox.Show(this, "\n\nImpossible contattare il server all'indirizzo: " + txtIpServer.Text, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (SocketException) { MetroFramework.MetroMessageBox.Show(this, "\n\nImpossible contattare il server all'indirizzo: " + txtIpServer.Text, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
             catch (Exception ex) { MetroFramework.MetroMessageBox.Show(this, "\n\n" + ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
@@ -161,20 +160,29 @@ namespace TcpFileTransfer
 
         private void lstBoxFile_MouseClick(object sender, MouseEventArgs e)
         {
-            toSend = new Byte[1000000];
-            toDownload = lstBoxFile.GetItemText(lstBoxFile.SelectedItem);
+            if (stream.DataAvailable && server.Connected)
+            {
+                toSend = new Byte[1000000];
+                toDownload = lstBoxFile.GetItemText(lstBoxFile.SelectedItem);
 
-            string send = "download;£&" + toDownload + ";£&";
+                string send = "download;£&" + toDownload + ";£&";
 
-            toSend = encoding.GetBytes(send);
+                toSend = encoding.GetBytes(send);
 
-            toSend = TrimEnd(toSend);
+                toSend = TrimEnd(toSend);
 
-            stream.Write(toSend, 0, toSend.Length);
 
-            toSend = new Byte[1000000];
+                stream.Write(toSend, 0, toSend.Length);
 
-            ReciveFile();
+                toSend = new Byte[1000000];
+
+                ReciveFile();
+            }
+            else
+            {
+                MetroFramework.MetroMessageBox.Show(this, "\n\n" + "Impossibile contattare il server", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ToggleFields(Status.Offline);
+            }
         }
 
         /// <summary>
@@ -196,11 +204,18 @@ namespace TcpFileTransfer
         /// </summary>
         private void ReciveFile()
         {
-            received = new Byte[1000000];
-            toSend = new Byte[1000000];
-            stream.Read(received, 0, received.Length);
-            byte[] toSave = TrimEnd(received);
-            SaveFile();
+            if (server.Connected)
+            {
+                received = new Byte[1000000];
+                toSend = new Byte[1000000];
+                stream.Read(received, 0, received.Length);
+                byte[] toSave = TrimEnd(received);
+                SaveFile();
+            }
+            else
+            {
+                Console.Write("block");
+            }
         }
 
         /// <summary>
@@ -281,34 +296,41 @@ namespace TcpFileTransfer
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
-            toSend = new byte[1000000];
-            byte[] temp = new byte[1000000];
-            string send = "upload;£&";
-            foreach (string x in dropped)
+            try
             {
-                send += x + ";£&";
-                temp = FileToByteArray(x);
-
-
-                toSend = encoding.GetBytes(send);
-                
-
-                byte[] rv = toSend.Concat(temp).ToArray();
-
-                toSend = TrimEnd(rv);
-                stream.Write(rv, 0, rv.Length);
-
                 toSend = new byte[1000000];
-
-                if (CheckForErrors())
+                byte[] temp = new byte[1000000];
+                string send = "upload;£&";
+                foreach (string x in dropped)
                 {
-                    break;
+                    send += x + ";£&";
+                    temp = FileToByteArray(x);
+
+
+                    toSend = encoding.GetBytes(send);
+
+
+                    byte[] rv = toSend.Concat(temp).ToArray();
+
+                    toSend = TrimEnd(rv);
+                    stream.Write(rv, 0, rv.Length);
+
+                    toSend = new byte[1000000];
+
+                    if (CheckForErrors())
+                    {
+                        break;
+                    }
+                    send = "upload;£&";
                 }
-                send = "upload;£&";
+                dropped.Clear();
+                lstFileToUpload.Items.Clear();
+                SizeToUpload = toSend.Length;
             }
-            dropped.Clear();
-            lstFileToUpload.Items.Clear();
-            SizeToUpload = toSend.Length;
+            catch(System.IO.IOException)
+            {
+                MetroFramework.MetroMessageBox.Show(this, "\n\n" + "Impossibile contattare il server", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         /// <summary>
         /// Update the ListView control with the dropped files
