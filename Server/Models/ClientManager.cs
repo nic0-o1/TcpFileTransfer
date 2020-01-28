@@ -73,7 +73,7 @@ namespace Server
             try
             {
                 SendDirectory();
-                FormServer.testEvent += FormServer_testEvent;
+                FormServer.ServerClosingEvent += FormServer_testEvent;
                 while (canRead)
                 {
                     readPath();
@@ -86,7 +86,6 @@ namespace Server
         private void FormServer_testEvent(object sender, EventArgs e)
         {
             _tcpClient.Client.Shutdown(SocketShutdown.Both);
-            Console.WriteLine("close");
         }
 
         /// <summary>

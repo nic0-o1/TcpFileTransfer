@@ -134,7 +134,10 @@ namespace Server
             return JsonConvert.SerializeObject(files);
         }
 
-        public static event EventHandler<EventArgs>testEvent;
+        /// <summary>
+        /// Event for handling server's closing
+        /// </summary>
+        public static event EventHandler<EventArgs>ServerClosingEvent;
 
         /// <summary>
         /// Starts the TCP server
@@ -254,7 +257,7 @@ namespace Server
             if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nProcedere con lo spegnimento del server ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 server.Stop();
-                testEvent?.Invoke(this, new EventArgs());
+                ServerClosingEvent?.Invoke(this, new EventArgs());
                 ToggleFields(Status.Offline);
             }
         }
