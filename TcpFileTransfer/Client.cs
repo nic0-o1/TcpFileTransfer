@@ -164,7 +164,7 @@ namespace TcpFileTransfer
         /// <summary>
         /// Check if the connection has been disconnected
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True in case of disconnection</returns>
         private bool CheckForDisconnection()
         {
             if (stream.DataAvailable)
@@ -308,7 +308,7 @@ namespace TcpFileTransfer
         /// Converts a file into byte array
         /// </summary>
         /// <param name="fileName">path of the file</param>
-        /// <returns></returns>
+        /// <returns>byte array of the file</returns>
         private byte[] FileToByteArray(string fileName)
         {
             byte[] fileData = null;

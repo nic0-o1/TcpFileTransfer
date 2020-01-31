@@ -198,6 +198,7 @@ namespace Server
         /// </summary>
         private void DisconnectCurrentClient()
         {
+            log.Info("Client disconnesso " + _tcpClient.Client.RemoteEndPoint);
             stream.Close();
             _tcpClient.Close();
             connectedClient.Remove(_tcpClient);

@@ -280,7 +280,7 @@
             this.lstBoxLog.ItemHeight = 16;
             this.lstBoxLog.Location = new System.Drawing.Point(12, 451);
             this.lstBoxLog.Name = "lstBoxLog";
-            this.lstBoxLog.Size = new System.Drawing.Size(287, 100);
+            this.lstBoxLog.Size = new System.Drawing.Size(417, 100);
             this.lstBoxLog.TabIndex = 21;
             // 
             // FormServer
