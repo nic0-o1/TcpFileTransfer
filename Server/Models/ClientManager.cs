@@ -16,9 +16,7 @@ namespace Server
     public class ClientManager
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-
-        bool canRead = true;
+        private static readonly List<TcpClient> connectedClient = new List<TcpClient>();
         /// <summary>
         /// Event for handling client's action
         /// </summary>
@@ -44,6 +42,7 @@ namespace Server
         /// </summary>
         public static bool canUpload;
 
+        private bool canRead = true;
         private readonly TcpClient _tcpClient;
         private Byte[] toSend = new Byte[1000000];
         private readonly Byte[] received = new Byte[1000000];
@@ -59,6 +58,7 @@ namespace Server
         {
             _tcpClient = client;
             stream = client.GetStream();
+            connectedClient.Add(client);
 
             log.Info($"Nuovo client connesso. IP {client.Client.RemoteEndPoint}");
 
@@ -73,23 +73,60 @@ namespace Server
             try
             {
                 SendDirectory();
-                FormServer.ServerClosingEvent += FormServer_testEvent;
+                FormServer.ServerClosingEvent += FormServer_ServerClosingEvent; ;
+
                 while (canRead)
                 {
-                    readPath();
+                    ReadMessage();
                 }
             }
             catch { }
 
         }
 
-        private void FormServer_testEvent(object sender, EventArgs e)
+        /// <summary>
+        /// Send the shared directory content
+        /// </summary>
+        private void SendDirectory()
         {
-            //_tcpClient.Client.Shutdown(SocketShutdown.Both);
-
-            Array.Clear(toSend, 0, toSend.Length);
-            toSend = encoding.GetBytes("disconnection");
+            toSend = encoding.GetBytes(sharedDir);
             stream.Write(toSend, 0, toSend.Length);
+        }
+
+        /// <summary>
+        /// Receive from the client the path of the file to download
+        /// </summary>
+        private void ReadMessage()
+        {
+            try
+            {
+                if (stream != null)
+                {
+                    Array.Clear(received, 0, received.Length);
+                    stream.Read(received, 0, received.Length);
+                    CheckMessage();
+                }
+            }
+            catch (System.IO.IOException) { canRead = false; }
+            catch (ObjectDisposedException) { canRead = false; }
+            catch { }
+        }
+
+        private void FormServer_ServerClosingEvent(object sender, EventArgs e)
+        {
+            canRead = false;
+            foreach (TcpClient x in connectedClient)
+            {
+                NetworkStream st = x.GetStream();
+                byte[] temp = new byte[500];
+                temp = encoding.GetBytes("disconnection");
+                st.Write(temp, 0, temp.Length);
+                x.GetStream().Close();
+                x.Close();
+            }
+            connectedClient.Clear();
+
+            log.Warn("Server arrestato");
         }
 
         /// <summary>
@@ -110,32 +147,9 @@ namespace Server
         }
 
         /// <summary>
-        /// Send the shared directory content
-        /// </summary>
-        private void SendDirectory()
-        {
-            toSend = encoding.GetBytes(sharedDir);
-            stream.Write(toSend, 0, toSend.Length);
-        }
-
-        /// <summary>
-        /// Receive from the client the path of the file to download
-        /// </summary>
-        private void readPath()
-        {
-            try
-            {
-                Array.Clear(received, 0, received.Length);
-                stream.Read(received, 0, received.Length);
-                checkMessage();
-            }
-            catch(System.IO.IOException) { canRead = false;  Console.WriteLine("excp"); }
-        }
-
-        /// <summary>
         /// Check the kind of message
         /// </summary>
-        private void checkMessage()
+        private void CheckMessage()
         {
             string rec = encoding.GetString(received);
             Array.Clear(toSend, 0, toSend.Length);
@@ -157,7 +171,7 @@ namespace Server
             {
                 if (canUpload)
                 {
-                    UploadFile(path);
+                    SaveReceivedFile(path);
                 }
                 else
                 {
@@ -174,16 +188,26 @@ namespace Server
             {
                 InitializeDirectory();
             }
+            else if (path[0].Contains("Disconnect"))
+            {
+                DisconnectCurrentClient();
+            }
         }
-
-
-
+        /// <summary>
+        /// Disconnect the current connected client
+        /// </summary>
+        private void DisconnectCurrentClient()
+        {
+            stream.Close();
+            _tcpClient.Close();
+            connectedClient.Remove(_tcpClient);
+        }
 
         /// <summary>
         /// Save the client's file and send the updated directory information
         /// </summary>
         /// <param name="path">name of the file</param>
-        private void UploadFile(string[] path)
+        private void SaveReceivedFile(string[] path)
         {
             string[] val = path[1].Split('\\');
 

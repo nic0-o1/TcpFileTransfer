@@ -26,7 +26,7 @@ namespace Server.Models
         public enum ClienAction
         {
             /// <summary>
-            /// Connected
+            /// New client connected
             /// </summary>
             Connesso,
 

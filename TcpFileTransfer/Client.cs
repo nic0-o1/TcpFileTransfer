@@ -74,7 +74,7 @@ namespace TcpFileTransfer
                         picReload.Enabled = false;
                         lblIP.Visible = false;
                         btnConnect.Enabled = true;
-                        lstBoxFile.Items.Clear();
+                        lstBoxFile.DataSource = null;
                         btnUpload.BackColor = Color.FromArgb(230, 230, 230);
                         btnConnect.BackColor = Color.FromArgb(128, 255, 128);
                         btnDisconnect.BackColor = Color.FromArgb(230, 230, 230);
@@ -146,6 +146,8 @@ namespace TcpFileTransfer
 
             TrimEnd(received);
 
+            Console.WriteLine(encoding.GetString(received));
+
             lstBoxFile.DataSource = JsonConvert.DeserializeObject<List<string>>(encoding.GetString(received));
         }
 
@@ -159,9 +161,37 @@ namespace TcpFileTransfer
             t.Start();
         }
 
+        /// <summary>
+        /// Check if the connection has been disconnected
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckForDisconnection()
+        {
+            if (stream.DataAvailable)
+            {
+                received = new Byte[1000000];
+                toSend = new Byte[1000000];
+                stream.Read(received, 0, received.Length);
+                byte[] toSave = TrimEnd(received);
+
+                string content = encoding.GetString(toSave);
+
+                if (content.Contains("disconnection"))
+                {
+                    // server.Client.Close();
+                    server.Client.Disconnect(true);
+                    Console.WriteLine("dis");
+                    MetroFramework.MetroMessageBox.Show(this, "\n\n" + "Impossibile contattare il server", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ToggleFields(Status.Offline);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void lstBoxFile_MouseClick(object sender, MouseEventArgs e)
         {
-            if (server.Connected )
+            if (server.Connected && !CheckForDisconnection())
             {
                 toSend = new Byte[1000000];
                 toDownload = lstBoxFile.GetItemText(lstBoxFile.SelectedItem);
@@ -178,11 +208,6 @@ namespace TcpFileTransfer
                 toSend = new Byte[1000000];
 
                 ReciveFile();
-            }
-            else
-            {
-                MetroFramework.MetroMessageBox.Show(this, "\n\n" + "Impossibile contattare il server", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ToggleFields(Status.Offline);
             }
         }
 
@@ -207,23 +232,18 @@ namespace TcpFileTransfer
         {
             try
             {
-                received = new Byte[1000000];
-                toSend = new Byte[1000000];
-                stream.Read(received, 0, received.Length);
-                byte[] toSave = TrimEnd(received);
+                Array.Clear(received, 0, received.Length);
+                Array.Clear(toSend, 0, toSend.Length);
 
-                string content = encoding.GetString(toSave);
-                if (content.Contains("disconnection"))
-                {
-                    server.Client.Close();
-                }
-                else
-                    SaveFile();
+                stream.Read(received, 0, received.Length);
+
+                SaveFile();
             }
             catch (System.IO.IOException)
             {
-                Console.Write("block");
+                Console.Write("IO excp");
             }
+            catch { }
         }
 
         /// <summary>
@@ -261,6 +281,7 @@ namespace TcpFileTransfer
         }
 
         private readonly List<string> dropped = new List<string>();
+
         private void lstFileToUpload_DragDrop(object sender, DragEventArgs e)
         {
             string[] items = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -300,8 +321,6 @@ namespace TcpFileTransfer
             return fileData;
         }
 
-
-
         private void btnUpload_Click(object sender, EventArgs e)
         {
             try
@@ -335,11 +354,12 @@ namespace TcpFileTransfer
                 lstFileToUpload.Items.Clear();
                 SizeToUpload = toSend.Length;
             }
-            catch(System.IO.IOException)
+            catch (System.IO.IOException)
             {
                 MetroFramework.MetroMessageBox.Show(this, "\n\n" + "Impossibile contattare il server", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         /// <summary>
         /// Update the ListView control with the dropped files
         /// </summary>
@@ -374,21 +394,25 @@ namespace TcpFileTransfer
             }
         }
 
+        /// <summary>
+        /// Disconnect the client from the server
+        /// </summary>
+        private void Disconnect()
+        {
+            Array.Clear(toSend, 0, toSend.Length);
+            toSend = encoding.GetBytes("Disconnect");
+            stream.Write(toSend, 0, toSend.Length);
+
+        }
+
         private void btnDisconnect_Click(object sender, EventArgs e)
         {
             if (server.Connected && MetroFramework.MetroMessageBox.Show(this, "\n\nInterrompere la connessione al server ?", "Server connesso", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
+                Disconnect();
                 server.Client.Close();
                 lblIP.Text = String.Empty;
                 ToggleFields(Status.Offline);
-            }
-        }
-
-        private void lstFileToUpload_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lstFileToUpload.SelectedItems.Count > 0)
-            {
-                lstFileToUpload.SelectedItems[0].BackColor = Color.Transparent; //use the color of your background of the listView
             }
         }
 

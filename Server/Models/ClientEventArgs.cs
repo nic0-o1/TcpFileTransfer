@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Server.Models
 {
@@ -13,7 +9,7 @@ namespace Server.Models
     /// </summary>
     public class ClientEventArgs : EventArgs
     {
-        private static List<Log> _logs = new List<Log>();
+        private static readonly List<Log> _logs = new List<Log>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Server.Models.ClientEventArgs"/> class with the specified 

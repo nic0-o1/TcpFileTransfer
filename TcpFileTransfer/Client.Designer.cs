@@ -200,7 +200,6 @@
             this.lstFileToUpload.TabIndex = 26;
             this.lstFileToUpload.UseCompatibleStateImageBehavior = false;
             this.lstFileToUpload.View = System.Windows.Forms.View.Details;
-            this.lstFileToUpload.SelectedIndexChanged += new System.EventHandler(this.lstFileToUpload_SelectedIndexChanged);
             this.lstFileToUpload.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstFileToUpload_DragDrop);
             this.lstFileToUpload.DragEnter += new System.Windows.Forms.DragEventHandler(this.lstFileToUpload_DragEnter);
             this.lstFileToUpload.DragLeave += new System.EventHandler(this.lstFileToUpload_DragLeave);

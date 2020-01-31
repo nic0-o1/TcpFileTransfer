@@ -3,7 +3,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -47,6 +46,7 @@ namespace Server
         /// Set field's properties based on the given status
         /// </summary>
         /// <param name="s">Status</param>
+        /// <exception cref="InvalidOperationException">Thrown when can't find a given status</exception>
         private void ToggleFields(Status s)
         {
             switch (s)
@@ -89,6 +89,8 @@ namespace Server
                         lblDrag.Visible = false;
                         break;
                     }
+                default:
+                    throw new InvalidOperationException("Status not found");
             }
         }
 
@@ -119,8 +121,8 @@ namespace Server
         }
 
         /// <summary>
-        /// Gives the content of a directory with files and subdirectories.
-        /// Removes the path before the actual directory
+        /// Gives the content of a directory with files.
+        /// Removes the path before the actual directory name
         /// </summary>
         /// <param name="path">Path of the selected directory</param>
         /// <returns>JSON with the content of the directories</returns>
@@ -135,9 +137,9 @@ namespace Server
         }
 
         /// <summary>
-        /// Event for handling server's closing
+        /// Event for handling server shutdown
         /// </summary>
-        public static event EventHandler<EventArgs>ServerClosingEvent;
+        public static event EventHandler<EventArgs> ServerClosingEvent;
 
         /// <summary>
         /// Starts the TCP server
@@ -146,7 +148,7 @@ namespace Server
         /// <exception cref="SocketException"></exception>
         private void StartServer(object portObj)
         {
-            //try
+            try
             {
                 int port = Convert.ToInt32(portObj);
                 server = new TcpListenerEx(IPAddress.Parse(GetIP()), port);
@@ -157,7 +159,6 @@ namespace Server
                 {
                     try
                     {
-
                         TcpClient client = server.AcceptTcpClient();
                         ClientManager clientManager = new ClientManager(client);
                         clientManager.ClientEvent += ClientManager_ClientEvent;
@@ -171,25 +172,24 @@ namespace Server
                         clientThread.Start();
                     }
                     catch { }
-                    
+
                 }
             }
-            //catch { }
+            catch { }
         }
 
         private void ClientManager_ContentUdateEvent(object sender, EventArgs e)
         {
             if (lastSelected != null)
+            {
                 UpdateFileExplorer(lastSelected);
+            }
         }
 
         private void ClientManager_ClientEvent(object sender, Models.ClientEventArgs e)
         {
-
             lstBoxLog.DataSource = null;
             lstBoxLog.DataSource = e.Logs;
-
-
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -256,8 +256,8 @@ namespace Server
         {
             if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nProcedere con lo spegnimento del server ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                server.Stop();
                 ServerClosingEvent?.Invoke(this, new EventArgs());
+                server.Stop();
                 ToggleFields(Status.Offline);
             }
         }
