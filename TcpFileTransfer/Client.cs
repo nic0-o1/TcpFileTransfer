@@ -202,7 +202,6 @@ namespace TcpFileTransfer
 
                 toSend = TrimEnd(toSend);
 
-
                 stream.Write(toSend, 0, toSend.Length);
 
                 toSend = new Byte[1000000];
@@ -333,9 +332,7 @@ namespace TcpFileTransfer
                     send += x + ";£&";
                     temp = FileToByteArray(x);
 
-
                     toSend = encoding.GetBytes(send);
-
 
                     byte[] rv = toSend.Concat(temp).ToArray();
 

@@ -17,6 +17,7 @@ namespace Server
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly List<TcpClient> connectedClient = new List<TcpClient>();
+
         /// <summary>
         /// Event for handling client's action
         /// </summary>
@@ -43,8 +44,8 @@ namespace Server
         public static bool canUpload;
 
         private bool canRead = true;
-        private readonly TcpClient _tcpClient;
         private Byte[] toSend = new Byte[1000000];
+        private readonly TcpClient _tcpClient;
         private readonly Byte[] received = new Byte[1000000];
         private readonly Encoding encoding = Encoding.GetEncoding("Windows-1252");
         private readonly NetworkStream stream;
@@ -73,7 +74,7 @@ namespace Server
             try
             {
                 SendDirectory();
-                FormServer.ServerClosingEvent += FormServer_ServerClosingEvent; ;
+                FormServer.ServerClosingEvent += FormServer_ServerClosingEvent; 
 
                 while (canRead)
                 {
@@ -199,6 +200,7 @@ namespace Server
         private void DisconnectCurrentClient()
         {
             log.Info("Client disconnesso " + _tcpClient.Client.RemoteEndPoint);
+
             stream.Close();
             _tcpClient.Close();
             connectedClient.Remove(_tcpClient);

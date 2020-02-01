@@ -157,21 +157,17 @@ namespace Server
 
                 while (server.Active)
                 {
-                    try
+                    TcpClient client = server.AcceptTcpClient();
+                    ClientManager clientManager = new ClientManager(client);
+                    clientManager.ClientEvent += ClientManager_ClientEvent;
+                    clientManager.ContentUpdateEvent += ClientManager_ContentUdateEvent;
+
+                    Thread clientThread = new Thread(new ThreadStart(clientManager.ManageConnection))
                     {
-                        TcpClient client = server.AcceptTcpClient();
-                        ClientManager clientManager = new ClientManager(client);
-                        clientManager.ClientEvent += ClientManager_ClientEvent;
-                        clientManager.ContentUpdateEvent += ClientManager_ContentUdateEvent;
+                        IsBackground = true
+                    };
 
-                        Thread clientThread = new Thread(new ThreadStart(clientManager.ManageConnection))
-                        {
-                            IsBackground = true
-                        };
-
-                        clientThread.Start();
-                    }
-                    catch { }
+                    clientThread.Start();
 
                 }
             }
