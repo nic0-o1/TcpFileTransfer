@@ -3,6 +3,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -174,6 +175,13 @@ namespace Server
             catch { }
         }
 
+        private void ShutdownServer()
+        {
+            ServerClosingEvent?.Invoke(this, new EventArgs());
+            server.Stop();
+            ToggleFields(Status.Offline);
+        }
+
         private void ClientManager_ContentUdateEvent(object sender, EventArgs e)
         {
             if (lastSelected != null)
@@ -223,13 +231,15 @@ namespace Server
             {
                 if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nServer attivo. Uscire ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    server.Stop();
+                    ShutdownServer();
                 }
+                QuickInfo.Visible = false;
+                QuickInfo.Dispose();
             }
             catch { }
         }
 
-        private void canUpload_CheckedChanged(object sender, EventArgs e)
+        private void canUploadToggle_CheckedChanged(object sender, EventArgs e)
         {
             if (MetroUploadToggle.Checked)
             {
@@ -252,15 +262,25 @@ namespace Server
         {
             if (server.Active && MetroFramework.MetroMessageBox.Show(this, "\n\nProcedere con lo spegnimento del server ?", "Attenzione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                ServerClosingEvent?.Invoke(this, new EventArgs());
-                server.Stop();
-                ToggleFields(Status.Offline);
+                ShutdownServer();
             }
         }
 
         private void picReload_Click(object sender, EventArgs e)
         {
             UpdateFileExplorer(lastSelected);
+        }
+
+        private void QuickMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem == QuickMenu.Items[0])
+            {
+                ShutdownServer();
+            }
+            else if (e.ClickedItem == QuickMenu.Items[2])
+            {
+                Process.Start("Server.log");
+            }
         }
 
         #region TreeWiew and ListView management
@@ -312,6 +332,7 @@ namespace Server
         }
 
         private TreeNode lastSelected;
+
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             TreeNode newSelected = e.Node;
@@ -321,7 +342,7 @@ namespace Server
         }
 
         #region ListView DragAndDrop
-        private void listView1_DragDrop(object sender, DragEventArgs e)
+        private void lstViewFiles_DragDrop(object sender, DragEventArgs e)
         {
             //As soon as you release the file will be copied
             if (server.Active)
@@ -334,7 +355,7 @@ namespace Server
             ToggleFields(Status.DragOut);
         }
 
-        private void listView1_DragEnter(object sender, DragEventArgs e)
+        private void lstViewFiles_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
             {
@@ -343,13 +364,14 @@ namespace Server
             }
         }
 
-        private void listView1_DragLeave(object sender, EventArgs e)
+        private void lstViewFiles_DragLeave(object sender, EventArgs e)
         {
             ToggleFields(Status.DragOut);
         }
         #endregion
 
         #endregion
+
 
     }
 }

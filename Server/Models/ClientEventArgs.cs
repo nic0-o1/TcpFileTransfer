@@ -12,7 +12,7 @@ namespace Server.Models
         private static readonly List<Log> _logs = new List<Log>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Server.Models.ClientEventArgs"/> class with the specified 
+        /// Initializes a new instance of the <see cref="Server.Models.ClientEventArgs"/> class  
         /// </summary>
         /// <param name="client"> Client's endpoint</param>
         /// <param name="action"> Client's action <see cref="Server.Models.Log.ClienAction"/></param>

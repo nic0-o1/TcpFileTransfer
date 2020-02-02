@@ -51,11 +51,17 @@
             this.lblState = new MetroFramework.Controls.MetroLabel();
             this.lblIP = new MetroFramework.Controls.MetroLabel();
             this.lstBoxLog = new System.Windows.Forms.ListBox();
+            this.QuickInfo = new System.Windows.Forms.NotifyIcon(this.components);
+            this.QuickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuItemShutdown = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItemLog = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picReload)).BeginInit();
+            this.QuickMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -100,7 +106,7 @@
             this.MetroUploadToggle.UseCustomBackColor = true;
             this.MetroUploadToggle.UseCustomForeColor = true;
             this.MetroUploadToggle.UseSelectable = true;
-            this.MetroUploadToggle.CheckedChanged += new System.EventHandler(this.canUpload_CheckedChanged);
+            this.MetroUploadToggle.CheckedChanged += new System.EventHandler(this.canUploadToggle_CheckedChanged);
             // 
             // splitContainer1
             // 
@@ -166,9 +172,9 @@
             this.lstViewFiles.TabIndex = 0;
             this.lstViewFiles.UseCompatibleStateImageBehavior = false;
             this.lstViewFiles.View = System.Windows.Forms.View.Details;
-            this.lstViewFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView1_DragDrop);
-            this.lstViewFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView1_DragEnter);
-            this.lstViewFiles.DragLeave += new System.EventHandler(this.listView1_DragLeave);
+            this.lstViewFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstViewFiles_DragDrop);
+            this.lstViewFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.lstViewFiles_DragEnter);
+            this.lstViewFiles.DragLeave += new System.EventHandler(this.lstViewFiles_DragLeave);
             // 
             // columnHeader1
             // 
@@ -283,6 +289,41 @@
             this.lstBoxLog.Size = new System.Drawing.Size(417, 100);
             this.lstBoxLog.TabIndex = 21;
             // 
+            // QuickInfo
+            // 
+            this.QuickInfo.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.QuickInfo.ContextMenuStrip = this.QuickMenu;
+            this.QuickInfo.Icon = ((System.Drawing.Icon)(resources.GetObject("QuickInfo.Icon")));
+            this.QuickInfo.Text = "Server";
+            this.QuickInfo.Visible = true;
+            // 
+            // QuickMenu
+            // 
+            this.QuickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemShutdown,
+            this.toolStripSeparator1,
+            this.menuItemLog});
+            this.QuickMenu.Name = "QuickMenu";
+            this.QuickMenu.Size = new System.Drawing.Size(146, 54);
+            this.QuickMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.QuickMenu_ItemClicked);
+            // 
+            // menuItemShutdown
+            // 
+            this.menuItemShutdown.Name = "menuItemShutdown";
+            this.menuItemShutdown.Size = new System.Drawing.Size(145, 22);
+            this.menuItemShutdown.Text = "Arresta server";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(142, 6);
+            // 
+            // menuItemLog
+            // 
+            this.menuItemLog.Name = "menuItemLog";
+            this.menuItemLog.Size = new System.Drawing.Size(145, 22);
+            this.menuItemLog.Text = "Mostra log";
+            // 
             // FormServer
             // 
             this.AllowDrop = true;
@@ -314,6 +355,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picReload)).EndInit();
+            this.QuickMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -341,6 +383,11 @@
         private MetroFramework.Controls.MetroLabel lblIP;
         private MetroFramework.Controls.MetroLabel lblDrag;
         private System.Windows.Forms.ListBox lstBoxLog;
+        private System.Windows.Forms.NotifyIcon QuickInfo;
+        private System.Windows.Forms.ContextMenuStrip QuickMenu;
+        private System.Windows.Forms.ToolStripMenuItem menuItemShutdown;
+        private System.Windows.Forms.ToolStripMenuItem menuItemLog;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 
